@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block title %}批次{% endblock %}
+{% block content %}
+<h1>执行批次</h1>
+<p class="lead">批次由 apply 写入台账；已完成批次可以从详情页回滚。</p>
+<div class="panel">
+{% if batches %}
+<table>
+  <tr><th>批次</th><th>计划</th><th>状态</th><th>移动</th><th>标记</th>
+      <th>开始</th><th>结束</th></tr>
+  {% for batch in batches %}
+  <tr>
+    <td><a href="{{ url_for('batch_detail', batch_id=batch.batch_id) }}">
+      {{ batch.batch_id }}</a></td>
+    <td><code>{{ batch.plan_id }}</code></td>
+    <td class="{% if batch.status == 'completed' %}ok{% elif batch.status in ['failed','rollback_partial'] %}bad{% endif %}">
+      {{ batch.status }}</td>
+    <td>{{ batch.moved_count }}</td>
+    <td>{{ batch.marked_count }}</td>
+    <td><code>{{ batch.started_at }}</code></td>
+    <td><code>{{ batch.finished_at or "—" }}</code></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="muted">尚无批次。</p>
+{% endif %}
+</div>
+{% endblock %}

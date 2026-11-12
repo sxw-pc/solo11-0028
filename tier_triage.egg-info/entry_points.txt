@@ -1,0 +1,2 @@
+[console_scripts]
+tier-triage = tier_triage.cli:main

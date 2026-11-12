@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}扫描 {{ snapshot.snapshot_id }}{% endblock %}
+{% block content %}
+<h1>扫描快照</h1>
+<p class="lead"><code>{{ snapshot.snapshot_id }}</code> · as-of {{ snapshot.as_of }} ·
+清单哈希 <code>{{ snapshot.inventory_hash }}</code></p>
+
+<h2>分区</h2>
+<div class="panel">
+<table>
+  <tr><th>分区</th><th>层</th><th>文件</th><th>字节</th><th>最后修改</th></tr>
+  {% for part in inventory.partitions %}
+  <tr>
+    <td><code>{{ part.partition_id }}</code></td>
+    <td><span class="pill">{{ part.layer }}</span></td>
+    <td>{{ part.file_count }}</td>
+    <td>{{ part.total_bytes|human_bytes }}</td>
+    <td>{{ part.last_modified or "—" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+<h2>未解析路径</h2>
+<div class="panel">
+{% if inventory.unparsed %}
+<table>
+  <tr><th>路径</th><th>原因</th></tr>
+  {% for item in inventory.unparsed %}
+  <tr><td><code>{{ item.path }}</code></td><td>{{ item.reason }}</td></tr>
+  {% endfor %}
+</table>
+{% else %}
+<p class="muted">无。</p>
+{% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}冷热分诊台{% endblock %}</title>
+  <style>
+    :root { --ink:#15221b; --muted:#5b6b62; --paper:#f4f1e8; --card:#fffdf7;
+            --line:#d8d2c2; --green:#1e6b4e; --amber:#a45c16; --red:#a53434; }
+    * { box-sizing: border-box; }
+    body { margin:0; background:var(--paper); color:var(--ink);
+           font:15px/1.55 "Segoe UI", "Microsoft YaHei", sans-serif; }
+    header { border-bottom:1px solid var(--line); background:#ebe6d8; }
+    nav, main, footer { max-width:1120px; margin:0 auto; padding:0 24px; }
+    nav { display:flex; align-items:center; gap:24px; min-height:64px; }
+    nav .brand { font-weight:700; letter-spacing:.04em; margin-right:auto; }
+    nav a { color:var(--ink); text-decoration:none; }
+    nav a:hover { color:var(--green); }
+    main { padding-top:28px; padding-bottom:56px; }
+    h1 { font-size:26px; margin:0 0 8px; }
+    h2 { font-size:19px; margin:30px 0 10px; }
+    p.lead { color:var(--muted); margin:0 0 20px; }
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+            gap:14px; }
+    .card { background:var(--card); border:1px solid var(--line); border-radius:10px;
+            padding:16px 18px; }
+    .card .label { color:var(--muted); font-size:12px; text-transform:uppercase;
+                   letter-spacing:.08em; }
+    .card .value { font-size:24px; font-weight:700; margin-top:4px; }
+    .panel { background:var(--card); border:1px solid var(--line); border-radius:10px;
+             padding:18px; overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:14px; }
+    th, td { text-align:left; border-bottom:1px solid var(--line); padding:9px 8px;
+             vertical-align:top; }
+    th { color:var(--muted); font-weight:600; font-size:12px; }
+    tr:last-child td { border-bottom:0; }
+    code { font-family:Consolas,monospace; font-size:12.5px; }
+    .pill { display:inline-block; border:1px solid var(--line); border-radius:999px;
+            padding:1px 9px; font-size:12px; background:#f8f5ec; }
+    .ok { color:var(--green); } .warn { color:var(--amber); }
+    .bad { color:var(--red); } .muted { color:var(--muted); }
+    .flash { padding:10px 14px; border-radius:8px; margin-bottom:16px;
+             border:1px solid var(--line); background:#fff8df; }
+    .flash.error { border-color:#dfb6b6; background:#fff0f0; }
+    button { font:inherit; border:1px solid #7d2f2f; background:#9d3b3b; color:#fff;
+             border-radius:7px; padding:8px 14px; cursor:pointer; }
+    button:hover { background:#812e2e; }
+    footer { border-top:1px solid var(--line); color:var(--muted);
+             font-size:12px; padding-top:16px; padding-bottom:30px; }
+  </style>
+</head>
+<body>
+<header>
+  <nav>
+    <span class="brand">冷热分诊台 / tier-triage</span>
+    <a href="{{ url_for('index') }}">概览</a>
+    <a href="{{ url_for('batches') }}">批次</a>
+    <span class="pill">仅 127.0.0.1</span>
+  </nav>
+</header>
+<main>
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% for category, message in messages %}
+      <div class="flash {{ category }}">{{ message }}</div>
+    {% endfor %}
+  {% endwith %}
+  {% block content %}{% endblock %}
+</main>
+<footer>离线审计界面 · 所有迁移动作来自本地 SQLite 台账 · 无外部资源</footer>
+</body>
+</html>

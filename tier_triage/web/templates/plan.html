@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}计划 {{ plan.plan_id }}{% endblock %}
+{% block content %}
+<h1>迁移计划</h1>
+<p class="lead"><code>{{ plan.plan_id }}</code> · as-of {{ plan.payload.as_of }} ·
+哈希 <code>{{ plan.payload.plan_hash }}</code></p>
+
+<div class="grid">
+  <div class="card">
+    <div class="label">预计下沉 / 清退</div>
+    <div class="value">{{ plan.payload.summary.projected_release_bytes|human_bytes }}</div>
+  </div>
+  <div class="card">
+    <div class="label">purge 候选</div>
+    <div class="value">{{ plan.payload.summary.action_counts.mark_purge }}</div>
+    <div class="muted">仅标记，不删除</div>
+  </div>
+  <div class="card">
+    <div class="label">被阻断</div>
+    <div class="value">{{ plan.payload.summary.blocked_actions }}</div>
+  </div>
+</div>
+
+<h2>动作</h2>
+<div class="panel">
+<table>
+  <tr><th>#</th><th>动作</th><th>状态</th><th>分区</th><th>字节</th><th>路径</th></tr>
+  {% for action in plan.payload.actions %}
+  <tr>
+    <td>{{ action.seq }}</td>
+    <td>{{ action.action }}</td>
+    <td class="{% if action.status == 'ready' %}ok{% elif action.status == 'blocked' %}bad{% endif %}">
+      {{ action.status }}</td>
+    <td><code>{{ action.partition_id }}</code></td>
+    <td>{{ action.bytes|human_bytes }}</td>
+    <td><code>{{ action.source }}</code>{% if action.target != action.source %}
+      → <code>{{ action.target or "—" }}</code>{% endif %}
+      {% if action.status == 'blocked' %}<div class="bad">{{ action.reason }}</div>{% endif %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+{% endblock %}

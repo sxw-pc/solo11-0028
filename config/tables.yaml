@@ -1,0 +1,22 @@
+version: 1
+tables:
+  - name: sales.orders
+    owner: analytics
+    description: "订单主表，按 dt 日分区。"
+    partition_keys: [dt]
+  - name: sales.order_items
+    owner: analytics
+    description: "订单明细，按 dt 日分区。"
+    partition_keys: [dt]
+  - name: marketing.events
+    owner: growth
+    description: "营销曝光与点击事件，按 dt 日分区。"
+    partition_keys: [dt]
+  - name: ops.audit_log
+    owner: platform
+    description: "本地审计日志分区，按 dt 与 region 两级分区。"
+    partition_keys: [region, dt]
+  - name: finance.ledger
+    owner: finance
+    description: "总账快照，按 dt 日分区，长期保留。"
+    partition_keys: [dt]

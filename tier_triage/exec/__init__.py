@@ -1,0 +1,1 @@
+"""Transactional execution and rollback."""

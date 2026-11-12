@@ -1,0 +1,28 @@
+version: 1
+windows: [7, 30, 90]
+defaults:
+  hot_retain_days: 30
+  hot_min_reads_30d: 5
+  warm_after_days: 60
+  cold_after_days: 180
+  cold_max_reads_30d: 1
+  purge_after_days: 730
+  purge_idle_days: 365
+  purge_max_reads_30d: 0
+  purge_allowed: false
+  max_hot_bytes: 4194304
+tables:
+  - match: "marketing.*"
+    priority: 10
+    description: "严格模式也只标记，不删除。"
+    purge_allowed: false
+    hot_retain_days: 21
+    warm_after_days: 45
+    cold_after_days: 120
+    purge_after_days: 730
+  - match: "sales.*"
+    priority: 20
+    hot_retain_days: 45
+    warm_after_days: 90
+    cold_after_days: 240
+    purge_after_days: 1095

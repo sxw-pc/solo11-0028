@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>存储分层概览</h1>
+<p class="lead">本页只读取本地台账；迁移执行与回滚由 CLI 或批次页调用同一服务层完成。</p>
+
+<div class="grid">
+  <div class="card">
+    <div class="label">最近扫描分区</div>
+    <div class="value">{{ snapshot.partition_count if snapshot else "—" }}</div>
+    <div class="muted">{{ snapshot.created_at if snapshot else "尚无扫描" }}</div>
+  </div>
+  <div class="card">
+    <div class="label">最近计划动作</div>
+    <div class="value">{{ plan.payload.summary.ready_actions if plan else "—" }}</div>
+    <div class="muted">{{ plan.plan_id if plan else "尚无计划" }}</div>
+  </div>
+  <div class="card">
+    <div class="label">已记录批次</div>
+    <div class="value">{{ batches|length }}</div>
+    <div class="muted">最近 12 条</div>
+  </div>
+</div>
+
+<h2>最近扫描</h2>
+<div class="panel">
+{% if snapshot %}
+  <p><a href="{{ url_for('snapshot_detail', snapshot_id=snapshot.snapshot_id) }}">
+    {{ snapshot.snapshot_id }}</a>
+    <span class="muted">· as-of {{ snapshot.as_of }} · 清单哈希
+    <code>{{ snapshot.inventory_hash[:16] }}…</code></span></p>
+  <table>
+    <tr><th>分区</th><th>表</th><th>文件</th><th>字节</th></tr>
+    {% for part in snapshot.inventory.partitions[:8] %}
+    <tr>
+      <td><code>{{ part.partition_id }}</code></td>
+      <td>{{ part.layer }}</td>
+      <td>{{ part.file_count }}</td>
+      <td>{{ part.total_bytes|human_bytes }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% if snapshot.inventory.partitions|length > 8 %}
+    <p class="muted">仅显示前 8 个分区。</p>
+  {% endif %}
+{% else %}
+  <p class="muted">运行 <code>python -m tier_triage scan</code> 或 <code>make demo</code>。</p>
+{% endif %}
+</div>
+
+<h2>最近计划</h2>
+<div class="panel">
+{% if plan %}
+  <p><a href="{{ url_for('plan_detail', plan_id=plan.plan_id) }}">{{ plan.plan_id }}</a>
+    <span class="muted">· 哈希 <code>{{ plan.payload.plan_hash[:16] }}…</code></span></p>
+  <table>
+    <tr><th>动作</th><th>就绪</th><th>阻断</th></tr>
+    {% for name, count in plan.payload.summary.action_counts.items() %}
+    <tr><td>{{ name }}</td><td>{{ count }}</td>
+        <td>{{ plan.payload.summary.blocked_actions if name == 'move' else 0 }}</td></tr>
+    {% endfor %}
+  </table>
+{% else %}
+  <p class="muted">尚无计划。</p>
+{% endif %}
+</div>
+
+<h2>批次</h2>
+<div class="panel">
+{% if batches %}
+<table>
+  <tr><th>批次</th><th>状态</th><th>移动</th><th>标记</th><th>开始时间</th></tr>
+  {% for batch in batches %}
+  <tr>
+    <td><a href="{{ url_for('batch_detail', batch_id=batch.batch_id) }}">
+      {{ batch.batch_id }}</a></td>
+    <td class="{% if batch.status == 'completed' %}ok{% elif batch.status in ['failed','rollback_partial'] %}bad{% endif %}">
+      {{ batch.status }}</td>
+    <td>{{ batch.moved_count }}</td>
+    <td>{{ batch.marked_count }}</td>
+    <td><code>{{ batch.started_at }}</code></td>
+  </tr>
+  {% endfor %}
+</table>
+{% else %}
+  <p class="muted">尚无执行批次。</p>
+{% endif %}
+</div>
+{% endblock %}

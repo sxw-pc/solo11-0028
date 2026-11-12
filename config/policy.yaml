@@ -1,0 +1,66 @@
+version: 1
+windows: [7, 30, 90]
+defaults:
+  hot_retain_days: 7
+  hot_min_reads_30d: 6
+  warm_after_days: 30
+  cold_after_days: 90
+  cold_max_reads_30d: 1
+  purge_after_days: 365
+  purge_idle_days: 180
+  purge_max_reads_30d: 0
+  purge_allowed: false
+  max_hot_bytes: 8388608
+tables:
+  - match: "marketing.*"
+    priority: 20
+    description: "营销事件允许在合规复核前进入 purge 候选，从不物理删除。"
+    hot_retain_days: 3
+    hot_min_reads_30d: 12
+    warm_after_days: 20
+    cold_after_days: 60
+    cold_max_reads_30d: 2
+    purge_after_days: 120
+    purge_idle_days: 45
+    purge_max_reads_30d: 0
+    purge_allowed: true
+    max_hot_bytes: 2097152
+  - match: "sales.orders"
+    priority: 40
+    description: "订单主表保守分层；永不允许 purge。"
+    hot_retain_days: 10
+    hot_min_reads_30d: 10
+    warm_after_days: 35
+    cold_after_days: 120
+    cold_max_reads_30d: 2
+    purge_after_days: 730
+    purge_idle_days: 365
+    purge_max_reads_30d: 0
+    purge_allowed: false
+    max_hot_bytes: 33554432
+  - match: "ops.audit_log"
+    priority: 30
+    description: "审计日志长保留，不进入 purge。"
+    hot_retain_days: 14
+    hot_min_reads_30d: 4
+    warm_after_days: 45
+    cold_after_days: 180
+    cold_max_reads_30d: 1
+    purge_after_days: 900
+    purge_idle_days: 365
+    purge_max_reads_30d: 0
+    purge_allowed: false
+    max_hot_bytes: 67108864
+  - match: "finance.*"
+    priority: 50
+    description: "财务域严格保留，审阅后也不得生成清退动作。"
+    hot_retain_days: 30
+    hot_min_reads_30d: 3
+    warm_after_days: 60
+    cold_after_days: 365
+    cold_max_reads_30d: 0
+    purge_after_days: 1095
+    purge_idle_days: 730
+    purge_max_reads_30d: 0
+    purge_allowed: false
+    max_hot_bytes: 134217728

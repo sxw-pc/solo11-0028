@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}批次 {{ batch.batch_id }}{% endblock %}
+{% block content %}
+<h1>批次详情</h1>
+<p class="lead"><code>{{ batch.batch_id }}</code> · 计划 <code>{{ batch.plan_id }}</code>
+  · 状态 <strong class="{% if batch.status == 'completed' %}ok{% elif batch.status in ['failed','rollback_partial'] %}bad{% endif %}">{{ batch.status }}</strong></p>
+
+<div class="grid">
+  <div class="card"><div class="label">动作</div>
+    <div class="value">{{ batch.action_count }}</div></div>
+  <div class="card"><div class="label">已移动</div>
+    <div class="value">{{ batch.moved_count }}</div></div>
+  <div class="card"><div class="label">已标记 purge</div>
+    <div class="value">{{ batch.marked_count }}</div></div>
+</div>
+
+{% if batch.error %}
+<h2>错误</h2>
+<div class="panel bad"><code>{{ batch.error }}</code></div>
+{% endif %}
+
+<h2>动作台账</h2>
+<div class="panel">
+<table>
+  <tr><th>#</th><th>动作</th><th>状态</th><th>分区</th><th>源 → 目标</th><th>错误</th></tr>
+  {% for action in actions %}
+  <tr>
+    <td>{{ action.seq }}</td>
+    <td>{{ action.action }}</td>
+    <td class="{% if action.status in ['moved','marked','rolled_back','unmarked'] %}ok{% elif action.status in ['failed','revert_failed','unrecoverable'] %}bad{% endif %}">
+      {{ action.status }}</td>
+    <td><code>{{ action.partition_id }}</code></td>
+    <td><code>{{ action.source_rel }}</code> → <code>{{ action.target_rel or "—" }}</code></td>
+    <td>{{ action.error or "—" }}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+<h2>回滚</h2>
+<div class="panel">
+{% if batch.status == "completed" %}
+  <p>回滚会尝试将本批次所有已移动分区还原到原路径；外部已改动的路径会被标记为
+    <code>unrecoverable</code>，不会覆盖现有文件。</p>
+  <form method="post" action="{{ url_for('batch_rollback', batch_id=batch.batch_id) }}"
+        onsubmit="return confirm('确认回滚该批次？');">
+    <button type="submit">回滚此批次</button>
+  </form>
+{% else %}
+  <p class="muted">仅 completed 状态批次可回滚。</p>
+{% endif %}
+{% if rollbacks %}
+  {% for item in rollbacks %}
+  <p>回滚记录 {{ item.rollback_id }}：还原 {{ item.restored_count }}，
+    不可恢复 {{ item.unrecoverable_count }}，时间 <code>{{ item.created_at }}</code></p>
+  {% endfor %}
+{% endif %}
+</div>
+{% endblock %}
