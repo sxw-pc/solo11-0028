@@ -35,10 +35,12 @@ make serve                 # 打开 http://127.0.0.1:5000（仅回环地址）
 # 等效：python -m tier_triage serve --lake data/lake --db data/ledger/tier_triage.sqlite
 ```
 
-`make demo` 依次完成：生成 mock 湖 + 访问日志 → `scan` → `evaluate` →
-确定性 `plan` → apply 前置校验 → 确认后 `--apply` → Markdown/JSON 报告 →
+`make demo` 依次完成：生成 mock 湖 + 访问日志 → `scan` → 独立体积画像
+`profile` → 带画像的 `evaluate` → 确定性 `plan`（容量压力参与决策）→
+apply 前置校验 → 确认后 `--apply` → Markdown/JSON 报告 →
 `rollback` → 回滚后报告。所有产物位于 `data/artifacts/`，台账位于
-`data/ledger/tier_triage.sqlite`。
+`data/ledger/tier_triage.sqlite`。不带 `--profile` 的旧命令仍可单独使用，
+结论与旧版本一致。
 
 ## 湖目录布局
 
@@ -54,6 +56,13 @@ data/lake/
 
 分区可以单级 `dt=YYYY-MM-DD`，也可以多级 `region=cn/dt=...`。扫描忽略符号
 链接；非法目录、表根散落文件等进入 `unparsed` 列表，不中断整体扫描。
+
+独立的**分区体积画像**（`profile` 命令 / `scan --profile-out`）在扫描阶段
+顺带实测每个分区的字节数、文件数和平均文件大小，产出单独的
+`volume_profile.json`（带 `as_of`、稳定排序与 `profile_hash`）。符号链接
+和无法解析的目录不计体积；缺文件或权限失败的分区进入画像异常列表并标记
+`incomplete`/`unreadable`，不会中断扫描。画像的容量语义与容量紧张时的取舍
+见 [docs/CAPACITY_PROFILE.md](docs/CAPACITY_PROFILE.md)。
 
 ## 配置：`config/policy.yaml`
 
@@ -73,9 +82,11 @@ data/lake/
 | `purge_max_reads_30d` | int | purge 候选的最大 30 天读次数 |
 | `purge_allowed` | bool | 是否允许该表族产生 purge 候选 |
 | `max_hot_bytes` | int | 分区超过此字节数时不得留在 hot |
+| `max_warm_bytes` | int | 可选 warm 容量预算（0/缺省不启用）；接入画像时超预算的 warm 下沉按缓解顺序阻断 |
 
 另有 `config/policy_strict.yaml`（严格保留）和 `config/tables.yaml`
-（表登记说明）。字段语义和边界见 [docs/LIFECYCLE_POLICY.md](docs/LIFECYCLE_POLICY.md)。
+（表登记说明）。字段语义和边界见 [docs/LIFECYCLE_POLICY.md](docs/LIFECYCLE_POLICY.md)，
+体积画像如何改变分层落点见 [docs/CAPACITY_PROFILE.md](docs/CAPACITY_PROFILE.md)。
 
 ## 常用命令
 
@@ -83,16 +94,24 @@ data/lake/
 # 扫描并记录快照
 python -m tier_triage scan --lake data/lake --out data/artifacts/inventory.json
 
-# 固定评估时钟，保证结果可复现
+# 独立分区体积画像（可选 --as-of；省略则为纯物理快照）
+python -m tier_triage profile --lake data/lake \
+  --as-of 2026-11-01T00:00:00Z --out data/artifacts/volume_profile.json
+
+# 固定评估时钟，保证结果可复现；--profile 可选，不传时为旧的年龄/读次数行为
 python -m tier_triage evaluate --lake data/lake \
   --usage data/usage/access.jsonl --policy config/policy.yaml \
-  --as-of 2026-11-01T00:00:00Z --out data/artifacts/evaluation.json \
+  --as-of 2026-11-01T00:00:00Z \
+  --profile data/artifacts/volume_profile.json \
+  --out data/artifacts/evaluation.json \
   --explain sales.orders.dt=2026-09-05
 
-# 构建确定性计划（dry-run）
+# 构建确定性计划（dry-run）；接入画像后容量阈值可改变分层落点
 python -m tier_triage plan --lake data/lake \
   --usage data/usage/access.jsonl --policy config/policy.yaml \
-  --as-of 2026-11-01T00:00:00Z --out data/artifacts/plan.json
+  --as-of 2026-11-01T00:00:00Z \
+  --profile data/artifacts/volume_profile.json \
+  --out data/artifacts/plan.json
 
 # 默认 dry-run；必须同时给 --apply 和 --yes 才执行移动
 python -m tier_triage apply --plan data/artifacts/plan.json \
@@ -150,8 +169,8 @@ tier-triage/
 ├─ config/               policy.yaml / policy_strict.yaml / tables.yaml
 ├─ scripts/              make_fixtures.py（幂等） / run_demo.py（一键演示）
 ├─ tier_triage/
-│  ├─ cli.py             scan / evaluate / plan / apply / rollback / report / serve
-│  ├─ lake/              inventory / partitioning / fs_ops
+│  ├─ cli.py             scan / profile / evaluate / plan / apply / rollback / report / serve
+│  ├─ lake/              inventory / profile（体积画像） / partitioning / fs_ops
 │  ├─ usage/             access_log / stats
 │  ├─ policy/            loader / rules
 │  ├─ decide/            scorer / planner

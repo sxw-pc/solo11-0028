@@ -16,10 +16,17 @@ CONFIG_FIELDS = (
     "purge_allowed",
     "max_hot_bytes",
 )
+# Optional capacity-budget fields. They are not part of CONFIG_FIELDS on
+# purpose: policies written before the volume-profile feature omit them, so
+# loading them must neither fail nor change the policy fingerprint. A value of
+# 0 means "no budget configured" and disables the related planner guard.
+OPTIONAL_INT_FIELDS = (
+    "max_warm_bytes",
+)
 INT_FIELDS = tuple(field for field in CONFIG_FIELDS if field != "purge_allowed")
 BOOL_FIELDS = ("purge_allowed",)
 TABLE_META_FIELDS = ("match", "priority", "description")
-TABLE_FIELDS = TABLE_META_FIELDS + CONFIG_FIELDS
+TABLE_FIELDS = TABLE_META_FIELDS + CONFIG_FIELDS + OPTIONAL_INT_FIELDS
 TOP_FIELDS = ("version", "windows", "defaults", "tables")
 
 
@@ -36,9 +43,22 @@ def resolve_policy(policy_data: dict[str, Any], table: str) -> dict[str, Any]:
     """Merge defaults and matching overrides into one effective config."""
     config = {field: policy_data["defaults"][field] for field in CONFIG_FIELDS}
     provenance = {field: "defaults" for field in CONFIG_FIELDS}
+    # Optional capacity budgets only appear when the policy document actually
+    # declares them, so legacy documents resolve to byte-identical configs.
+    optional_present = {
+        field for field in OPTIONAL_INT_FIELDS
+        if field in policy_data.get("defaults", {})
+    }
+    for field in optional_present:
+        config[field] = int(policy_data["defaults"][field])
+        provenance[field] = "defaults"
     rules = matching_rules(policy_data, table)
     for rule in rules:
         for field in CONFIG_FIELDS:
+            if field in rule:
+                config[field] = rule[field]
+                provenance[field] = rule["match"]
+        for field in OPTIONAL_INT_FIELDS:
             if field in rule:
                 config[field] = rule[field]
                 provenance[field] = rule["match"]
@@ -46,7 +66,8 @@ def resolve_policy(policy_data: dict[str, Any], table: str) -> dict[str, Any]:
         {
             "match": rule["match"],
             "priority": rule["priority"],
-            "overrides": [field for field in CONFIG_FIELDS if field in rule],
+            "overrides": [field for field in CONFIG_FIELDS + OPTIONAL_INT_FIELDS
+                          if field in rule],
         }
         for rule in sorted(
             rules, key=lambda rule: (-rule["priority"], rule["match"]))

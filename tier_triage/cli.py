@@ -14,6 +14,7 @@ from tier_triage.decide.scorer import evaluate_inventory, explain_decision
 from tier_triage.exec.executor import ExecutionError, execute_plan
 from tier_triage.exec.rollback import RollbackError, rollback_batch
 from tier_triage.lake.inventory import scan_lake
+from tier_triage.lake.profile import build_profile, load_profile, save_profile
 from tier_triage.policy.loader import PolicyError, load_policy
 from tier_triage.usage.access_log import load_access_log
 from tier_triage.usage.stats import compute_stats
@@ -43,13 +44,33 @@ def build_parser() -> argparse.ArgumentParser:
     scan = sub.add_parser("scan", help="scan lake partitions")
     _add_common(scan, as_of=False)
     scan.add_argument("--out", default=f"{DEFAULT_ARTIFACTS}/inventory.json")
+    scan.add_argument("--profile-out",
+                      help="also write an independent partition volume profile")
+    scan.add_argument("--as-of",
+                      help="optional clock stamped onto --profile-out; omit "
+                           "for a pure physical snapshot")
+    profile = sub.add_parser(
+        "profile",
+        help="build an independent partition volume profile (bytes, files, anomalies)")
+    profile.add_argument("--lake", default=DEFAULT_LAKE)
+    profile.add_argument("--out", default=f"{DEFAULT_ARTIFACTS}/volume_profile.json")
+    profile.add_argument(
+        "--as-of",
+        help="optional evaluation clock stamped onto the profile; omit for a "
+             "pure physical snapshot")
     evaluate = sub.add_parser("evaluate", help="score every partition")
     _add_common(evaluate)
     evaluate.add_argument("--out", default=f"{DEFAULT_ARTIFACTS}/evaluation.json")
+    evaluate.add_argument("--profile",
+                          help="volume profile artifact; without it the legacy "
+                               "age/reads-only behavior is used")
     evaluate.add_argument("--explain", help="partition id or unique suffix")
     plan = sub.add_parser("plan", help="build a deterministic migration plan")
     _add_common(plan)
     plan.add_argument("--out", default=f"{DEFAULT_ARTIFACTS}/plan.json")
+    plan.add_argument("--profile",
+                      help="volume profile artifact; without it the legacy "
+                           "age/reads-only behavior is used")
     apply = sub.add_parser("apply", help="preflight and optionally execute a plan")
     apply.add_argument("--plan", default=f"{DEFAULT_ARTIFACTS}/plan.json")
     apply.add_argument("--lake", default=DEFAULT_LAKE)
@@ -83,7 +104,8 @@ def _ledger_record(inventory: dict[str, Any], policy: Any, as_of: str,
         ledger.record_policy(policy)
 
 
-def _inputs(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any], Any]:
+def _inputs(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any], Any,
+                                                dict[str, Any] | None]:
     inventory = scan_lake(args.lake)
     policy = load_policy(args.policy)
     records, warnings = load_access_log(args.usage)
@@ -92,7 +114,11 @@ def _inputs(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, Any], A
               file=sys.stderr)
     stats = compute_stats(inventory, records, parse_datetime(args.as_of),
                           policy.windows)
-    return inventory, stats, policy
+    profile = None
+    profile_path = getattr(args, "profile", None)
+    if profile_path:
+        profile = load_profile(profile_path)
+    return inventory, stats, policy, profile
 
 
 def _print(value: dict[str, Any]) -> None:
@@ -107,41 +133,75 @@ def _write_optional(path: str | None, value: Any) -> None:
 def _cmd_scan(args: argparse.Namespace) -> int:
     inventory = scan_lake(args.lake)
     write_json(args.out, inventory)
+    profile_out = getattr(args, "profile_out", None)
+    if profile_out:
+        profile = build_profile(args.lake, getattr(args, "as_of", None))
+        save_profile(profile_out, profile)
     with Ledger(args.db) as ledger:
         ledger.record_snapshot(inventory, "",
                                str(Path(args.lake).resolve()))
-    _print({"inventory": args.out,
-            "partitions": len(inventory["partitions"]),
-            "unparsed": len(inventory["unparsed"]),
-            "inventory_hash": inventory["inventory_hash"]})
+    result = {"inventory": args.out,
+              "partitions": len(inventory["partitions"]),
+              "unparsed": len(inventory["unparsed"]),
+              "inventory_hash": inventory["inventory_hash"]}
+    if profile_out:
+        result["volume_profile"] = profile_out
+        result["profile_anomalies"] = len(profile["anomalies"])
+        result["profile_hash"] = profile["profile_hash"]
+    _print(result)
+    return 0
+
+
+def _cmd_profile(args: argparse.Namespace) -> int:
+    profile = build_profile(args.lake, getattr(args, "as_of", None))
+    save_profile(args.out, profile)
+    _print({"volume_profile": args.out,
+            "profile_hash": profile["profile_hash"],
+            "inventory_hash": profile["inventory_hash"],
+            "as_of": profile["as_of"],
+            "partitions": profile["summary"]["profiled_partitions"],
+            "unreadable": profile["summary"]["unreadable_partitions"],
+            "incomplete": profile["summary"]["incomplete_partitions"],
+            "anomalies": profile["summary"]["anomaly_count"],
+            "total_bytes": profile["summary"]["total_bytes"]})
     return 0
 
 
 def _cmd_evaluate(args: argparse.Namespace) -> int:
-    inventory, stats, policy = _inputs(args)
-    evaluation = evaluate_inventory(inventory, stats, policy, args.as_of)
+    inventory, stats, policy, profile = _inputs(args)
+    evaluation = evaluate_inventory(inventory, stats, policy, args.as_of, profile)
     write_json(args.out, evaluation)
     _ledger_record(inventory, policy, args.as_of, args.db, args.lake)
-    _print({"evaluation": args.out,
-            "partitions": evaluation["summary"]["partitions"],
-            "tier_distribution": evaluation["summary"]["tier_distribution"],
-            "policy_fingerprint": policy.fingerprint})
+    result = {"evaluation": args.out,
+              "partitions": evaluation["summary"]["partitions"],
+              "tier_distribution": evaluation["summary"]["tier_distribution"],
+              "policy_fingerprint": policy.fingerprint}
+    if profile is not None:
+        result["profile_hash"] = profile["profile_hash"]
+        result["oversize_partitions"] = evaluation["capacity_profile"][
+            "oversize_partitions"]
+    _print(result)
     if args.explain:
         _print(explain_decision(evaluation, args.explain))
     return 0
 
 
 def _cmd_plan(args: argparse.Namespace) -> int:
-    inventory, stats, policy = _inputs(args)
-    evaluation = evaluate_inventory(inventory, stats, policy, args.as_of)
+    inventory, stats, policy, profile = _inputs(args)
+    evaluation = evaluate_inventory(inventory, stats, policy, args.as_of, profile)
     plan = build_plan(evaluation, inventory, args.lake)
     save_plan(args.out, plan)
     with Ledger(args.db) as ledger:
         ledger.record_snapshot(inventory, args.as_of, str(Path(args.lake).resolve()))
         ledger.record_policy(policy)
         ledger.record_plan(plan, str(Path(args.out).resolve()))
-    _print({"plan": args.out, "plan_id": plan["plan_id"],
-            "plan_hash": plan["plan_hash"], "summary": plan["summary"]})
+    result = {"plan": args.out, "plan_id": plan["plan_id"],
+              "plan_hash": plan["plan_hash"], "summary": plan["summary"]}
+    if profile is not None:
+        pressure = plan["capacity_profile"]["pressure"]
+        result["profile_hash"] = profile["profile_hash"]
+        result["capacity_blocked"] = len(pressure["capacity_blocked"])
+    _print(result)
     return 0
 
 
@@ -184,7 +244,8 @@ def _cmd_serve(args: argparse.Namespace) -> int:
 
 
 COMMANDS = {
-    "scan": _cmd_scan, "evaluate": _cmd_evaluate, "plan": _cmd_plan,
+    "scan": _cmd_scan, "profile": _cmd_profile,
+    "evaluate": _cmd_evaluate, "plan": _cmd_plan,
     "apply": _cmd_apply, "rollback": _cmd_rollback, "report": _cmd_report,
     "serve": _cmd_serve,
 }

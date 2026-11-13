@@ -8,3 +8,5 @@ __pycache__/
 .benchmarks/
 .env
 dist/
+# Generated demo lake, usage logs, ledger and artifacts (see scripts/run_demo.py)
+data/

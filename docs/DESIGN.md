@@ -8,8 +8,9 @@
 | 访问统计 Usage | `reads_Nd`、`bytes_Nd`、`last_access`、`idle_days`、`never_accessed` | 仅统计 `read/scan/select`，且时间戳不晚于评估时钟 |
 | 快照 Snapshot | `snapshot_id`、`inventory_hash`、`inventory_json` | 扫描结果的稳定摘要；`snapshot_id = snap-<hash 前 16 位>` |
 | 策略 Policy | `fingerprint`、`defaults`、`tables`、`windows` | 严格 schema 校验；指纹是规范化 YAML 数据的 SHA-256 |
-| 判定 Decision | `tier`、`score`、`checks`、`reasons`、`matched_rules` | 四档结论及完整理由链 |
-| 计划 Plan | `plan_id`、`plan_hash`、`actions[]`、`summary` | 动作类型 `move / mark_purge / noop`，状态 `ready / blocked / noop` |
+| 判定 Decision | `tier`、`score`、`checks`、`reasons`、`matched_rules` | 四档结论及完整理由链；接入体积画像时额外携带 `capacity`/`size_band`，并可能由 `capacity_hot_limit` 硬检查改判落点 |
+| 体积画像 VolumeProfile | `profile_hash`、`as_of`、`partitions[](total_bytes,file_count,avg_file_size,status)`、`anomalies[]` | 独立于清单的物理体积产物；符号链接/不可解析目录不计体积，权限与缺文件进异常列表，稳定排序、可重复哈希 |
+| 计划 Plan | `plan_id`、`plan_hash`、`actions[]`、`summary`、`capacity_profile?` | 动作类型 `move / mark_purge / noop`，状态 `ready / blocked / noop`；画像模式下容量预算可阻断 warm 下沉 |
 | 批次 Batch | `batch_id`、`plan_id`、`status`、`moved_count`、`marked_count` | 状态包括 `running / completed / failed / rolled_back / rollback_partial` |
 | 动作 Action | `seq`、`source_rel`、`target_rel`、`bytes`、`status` | 台账中保留初始状态、执行结果和回滚结果 |
 | 回滚 Rollback | `batch_id`、`restored_count`、`unrecoverable_count`、`detail_json` | 每次回滚一条记录 |
@@ -33,11 +34,18 @@ SQLite 表：`snapshots`、`policies`、`plans`、`batches`、`actions`、
 4. 策略命中规则先按 `(priority, match)` 升序应用字段覆盖，输出命中链按时
    优先级降序。
 5. 访问记录按 `(ts, line)` 排序，保证相同日志输入得到相同的最后访问时间。
+6. 体积画像分区按 `partition_id`、异常按 `(path, kind, detail,
+   partition_id)` 排序；画像内全部目录遍历先排序后处理，`profile_hash`
+   不含湖根路径与墙钟，重复运行字节一致。
 
 **哈希口径。**
 
 - `inventory_hash = sha256(canonical({schema_version, layout, partitions,
   tables, unparsed}))`，不包含湖根绝对路径和扫描时间。
+- `profile_hash = sha256(canonical(画像去掉 profile_hash))`；画像同时记录
+  对应 `inventory_hash`，消费者必须校验同源后才允许参与决策。
+- 策略指纹在规范化前剥离可选容量字段（如 `max_warm_bytes`），旧策略文件
+  指纹不变。
 - `policy fingerprint = sha256(canonical(加载后的策略数据))`。
 - `plan_hash = sha256(canonical(plan 去掉 plan_hash/plan_id))`。因此修改任意
   动作字段而不重算哈希，apply 会在预检阶段拒绝。

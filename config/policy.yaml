@@ -11,6 +11,11 @@ defaults:
   purge_max_reads_30d: 0
   purge_allowed: false
   max_hot_bytes: 8388608
+  # Optional warm-layer capacity budget (0/absent disables the guard). When a
+  # profile is attached, inbound warm moves are admitted in relief order
+  # (largest-oldest first) and moves that would overflow the budget are
+  # blocked with an explicit capacity reason instead of crushing warm.
+  max_warm_bytes: 4194304
 tables:
   - match: "marketing.*"
     priority: 20

@@ -6,7 +6,7 @@ POLICY ?= config/policy.yaml
 DB ?= data/ledger/tier_triage.sqlite
 ARTIFACTS ?= data/artifacts
 
-.PHONY: demo test serve scan evaluate plan clean
+.PHONY: demo test serve scan profile evaluate plan clean
 
 demo:
 	$(PYTHON) scripts/run_demo.py
@@ -20,6 +20,10 @@ serve:
 scan:
 	$(PYTHON) -m tier_triage scan --lake $(LAKE) --db $(DB) \
 		--out $(ARTIFACTS)/inventory.json
+
+profile:
+	$(PYTHON) -m tier_triage profile --lake $(LAKE) --as-of $(AS_OF) \
+		--out $(ARTIFACTS)/volume_profile.json
 
 evaluate:
 	$(PYTHON) -m tier_triage evaluate --lake $(LAKE) --usage $(USAGE) \

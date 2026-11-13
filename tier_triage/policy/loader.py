@@ -12,6 +12,7 @@ from tier_triage.policy.rules import (
     BOOL_FIELDS,
     CONFIG_FIELDS,
     INT_FIELDS,
+    OPTIONAL_INT_FIELDS,
     TABLE_FIELDS,
     TOP_FIELDS,
     config_is_ordered,
@@ -81,7 +82,7 @@ def _check_bool(value: Any, value_node: Node, name: str) -> bool:
 
 def _validate_defaults(node: Node) -> dict[str, Any]:
     entries = _map_entries(node, "defaults")
-    _check_unknown(entries, CONFIG_FIELDS, "defaults")
+    _check_unknown(entries, CONFIG_FIELDS + OPTIONAL_INT_FIELDS, "defaults")
     missing = [field for field in CONFIG_FIELDS if field not in entries]
     if missing:
         raise PolicyError(
@@ -93,6 +94,14 @@ def _validate_defaults(node: Node) -> dict[str, Any]:
     for field in BOOL_FIELDS:
         values[field] = _check_bool(yaml.safe_load(
             yaml.serialize(entries[field][1])), entries[field][1], field)
+    # Optional capacity budgets are validated and kept in the parsed data for
+    # consumers, but excluded from the fingerprint payload (see load_policy),
+    # so a policy document without them hashes exactly as before.
+    for field in OPTIONAL_INT_FIELDS:
+        if field in entries:
+            values[field] = _check_int(
+                yaml.safe_load(yaml.serialize(entries[field][1])),
+                entries[field][1], field)
     problems = config_is_ordered(values)
     if problems:
         raise PolicyError("; ".join(problems), _line(node))
@@ -128,6 +137,11 @@ def _validate_rule(node: Node, index: int, defaults: dict[str, Any]) -> dict[str
     for field in BOOL_FIELDS:
         if field in entries:
             rule[field] = _check_bool(
+                yaml.safe_load(yaml.serialize(entries[field][1])),
+                entries[field][1], f"{where}.{field}")
+    for field in OPTIONAL_INT_FIELDS:
+        if field in entries:
+            rule[field] = _check_int(
                 yaml.safe_load(yaml.serialize(entries[field][1])),
                 entries[field][1], f"{where}.{field}")
     effective = dict(defaults)
@@ -176,6 +190,19 @@ def _validate_document(root_node: Node) -> dict[str, Any]:
             "tables": tables}
 
 
+def _fingerprint_payload(data: dict[str, Any]) -> dict[str, Any]:
+    """Strip optional capacity fields so legacy policy fingerprints are stable."""
+    defaults = {key: value for key, value in data["defaults"].items()
+                if key not in OPTIONAL_INT_FIELDS}
+    tables = [
+        {key: value for key, value in rule.items()
+         if key not in OPTIONAL_INT_FIELDS}
+        for rule in data["tables"]
+    ]
+    return {"version": data["version"], "windows": data["windows"],
+            "defaults": defaults, "tables": tables}
+
+
 def load_policy(path: str | Path) -> Policy:
     source = Path(path)
     try:
@@ -192,5 +219,6 @@ def load_policy(path: str | Path) -> Policy:
     if root_node is None or not isinstance(loaded, dict):
         raise PolicyError("policy must be a YAML mapping", _line(root_node))
     data = _validate_document(root_node)
-    return Policy(data=data, fingerprint=sha256_obj(data),
+    return Policy(data=data,
+                  fingerprint=sha256_obj(_fingerprint_payload(data)),
                   source_path=str(source))

@@ -40,6 +40,14 @@ tables:
    `warm`。
 5. 否则 ⇒ `hot`。
 
+**接入体积画像时的容量硬限（可选路径）。** 当评估携带体积画像时，字节
+判断从清单估值切换为画像实测值，并在保留期检查之后新增硬检查
+`capacity_hot_limit`：实测 `total_bytes > max_hot_bytes` 的分区即使仍处于
+热层保留窗口，也不得留在 hot，而是改判 warm，理由链同时保留保留期（通过）
+与容量检查（不通过）。未携带画像时第 4 步的内联字节判断与判定顺序完全
+不变。容量预算 `max_warm_bytes` 与缓解顺序属于计划环节，见
+[CAPACITY_PROFILE.md](CAPACITY_PROFILE.md)。
+
 年龄优先取分区键日期（`dt/date/day/event_date` 的 `YYYY-MM-DD`）；无日期时
 回退到文件最后修改时间。所有年龄以注入的 `--as-of` 秒级时钟计算，未来时间
 截断为 0 天。`reads_30d` 只计读操作且窗口为左闭右闭
@@ -55,6 +63,9 @@ tables:
 - `windows` 必须严格递增、全为正整数且包含 `30`，否则策略加载失败。
 - `defaults` 的 10 个字段必须齐全；未知字段、错误类型、负值均失败，错误
   消息带 YAML 行号。
+- `max_warm_bytes` 是**可选**字段（defaults 与表规则均可写）：缺省或 0
+  表示不启用 warm 容量守卫。它不参与策略指纹计算，因此旧策略文件的指纹
+  保持不变；仅在携带体积画像的计划中生效。
 - 层次顺序必须满足：
   `hot_retain_days <= warm_after_days <= cold_after_days <= purge_after_days`；
   读取阈值满足：

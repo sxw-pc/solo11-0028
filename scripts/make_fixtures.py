@@ -15,27 +15,31 @@ READ_OPS = ("read", "scan", "read")
 
 
 PARTITIONS = [
-    # layer, db, table, partition parts, file count, (7d, 30d, 90d reads)
-    ("hot", "sales", "orders", ["dt=2026-10-28"], 2, (18, 24, 30)),
-    ("hot", "sales", "orders", ["dt=2026-10-10"], 2, (12, 16, 18)),
-    ("hot", "sales", "orders", ["dt=2026-09-05"], 1, (1, 4, 9)),
-    ("hot", "sales", "orders", ["dt=2026-06-15"], 2, (0, 0, 2)),
-    ("warm", "sales", "orders", ["dt=2025-05-01"], 1, (0, 0, 0)),
-    ("cold", "sales", "orders", ["dt=2024-01-01"], 1, (0, 0, 0)),
-    ("hot", "sales", "order_items", ["dt=2026-09-20"], 2, (1, 2, 5)),
-    ("hot", "sales", "order_items", ["dt=2026-03-01"], 1, (0, 0, 0)),
-    ("hot", "marketing", "events", ["dt=2026-10-31"], 2, (9, 14, 20)),
-    ("hot", "marketing", "events", ["dt=2026-10-05"], 1, (2, 5, 8)),
-    ("hot", "marketing", "events", ["dt=2026-08-20"], 2, (0, 1, 6)),
-    ("hot", "marketing", "events", ["dt=2026-05-01"], 1, (0, 0, 0)),
-    ("warm", "marketing", "events", ["dt=2025-07-01"], 1, (0, 0, 0)),
-    ("warm", "marketing", "events", ["dt=2026-09-10"], 1, (0, 0, 3)),
-    ("cold", "marketing", "events", ["dt=2026-07-15"], 1, (0, 0, 1)),
-    ("hot", "ops", "audit_log", ["region=cn", "dt=2026-10-20"], 2, (6, 9, 12)),
-    ("hot", "ops", "audit_log", ["region=cn", "dt=2026-07-01"], 1, (2, 3, 7)),
-    ("hot", "ops", "audit_log", ["region=us", "dt=2025-06-01"], 1, (0, 0, 0)),
-    ("hot", "finance", "ledger", ["dt=2026-10-01"], 2, (8, 11, 16)),
-    ("warm", "finance", "ledger", ["dt=2025-01-01"], 1, (0, 0, 0)),
+    # layer, db, table, partition parts, file count, (7d, 30d, 90d reads), bytes
+    ("hot", "sales", "orders", ["dt=2026-10-28"], 2, (18, 24, 30), None),
+    ("hot", "sales", "orders", ["dt=2026-10-10"], 2, (12, 16, 18), None),
+    ("hot", "sales", "orders", ["dt=2026-09-05"], 1, (1, 4, 9), None),
+    ("hot", "sales", "orders", ["dt=2026-06-15"], 2, (0, 0, 2), None),
+    ("warm", "sales", "orders", ["dt=2025-05-01"], 1, (0, 0, 0), None),
+    ("cold", "sales", "orders", ["dt=2024-01-01"], 1, (0, 0, 0), None),
+    ("hot", "sales", "order_items", ["dt=2026-09-20"], 2, (1, 2, 5), None),
+    ("hot", "sales", "order_items", ["dt=2026-03-01"], 1, (0, 0, 0), None),
+    # Young (inside the retention window) but physically huge: the volume
+    # profile must force it out of hot even though age/reads would keep it.
+    ("hot", "sales", "order_items", ["dt=2026-10-28"], 1, (14, 20, 26),
+     9 * 1024 * 1024),
+    ("hot", "marketing", "events", ["dt=2026-10-31"], 2, (9, 14, 20), None),
+    ("hot", "marketing", "events", ["dt=2026-10-05"], 1, (2, 5, 8), None),
+    ("hot", "marketing", "events", ["dt=2026-08-20"], 2, (0, 1, 6), None),
+    ("hot", "marketing", "events", ["dt=2026-05-01"], 1, (0, 0, 0), None),
+    ("warm", "marketing", "events", ["dt=2025-07-01"], 1, (0, 0, 0), None),
+    ("warm", "marketing", "events", ["dt=2026-09-10"], 1, (0, 0, 3), None),
+    ("cold", "marketing", "events", ["dt=2026-07-15"], 1, (0, 0, 1), None),
+    ("hot", "ops", "audit_log", ["region=cn", "dt=2026-10-20"], 2, (6, 9, 12), None),
+    ("hot", "ops", "audit_log", ["region=cn", "dt=2026-07-01"], 1, (2, 3, 7), None),
+    ("hot", "ops", "audit_log", ["region=us", "dt=2025-06-01"], 1, (0, 0, 0), None),
+    ("hot", "finance", "ledger", ["dt=2026-10-01"], 2, (8, 11, 16), None),
+    ("warm", "finance", "ledger", ["dt=2025-01-01"], 1, (0, 0, 0), None),
 ]
 
 
@@ -51,20 +55,35 @@ def _partition_date(parts: list[str]) -> datetime:
 
 
 def _write_partition(lake_root: Path, layer: str, db: str, table: str,
-                     parts: list[str], file_count: int, data_root: Path) -> None:
+                     parts: list[str], file_count: int, data_root: Path,
+                     byte_size: int | None = None) -> None:
     directory = lake_root.joinpath(layer, db, table, *parts)
     directory.mkdir(parents=True, exist_ok=True)
     stamp = (_partition_date(parts) + timedelta(hours=12)).timestamp()
     for index in range(file_count):
-        payload = {
-            "partition": "/".join([layer, db, table, *parts]),
-            "file": index,
-            "schema": "demo-v1",
-            "rows": 3 + index,
-        }
         path = directory / f"part-{index:04d}.json"
-        path.write_text(json.dumps(payload, sort_keys=True) + "\n",
-                        encoding="utf-8", newline="\n")
+        if byte_size is not None:
+            # Sparse, seek-written file: deterministic st_size without
+            # allocating the full payload on disk. Content is still real
+            # bytes (a header plus a trailing marker), never a symlink.
+            header = json.dumps({
+                "partition": "/".join([layer, db, table, *parts]),
+                "file": index, "schema": "demo-v1-sparse",
+            }, sort_keys=True).encode("utf-8")
+            with path.open("wb") as handle:
+                handle.write(header)
+                handle.truncate(byte_size)
+                handle.seek(max(0, byte_size - 1))
+                handle.write(b"\n")
+        else:
+            payload = {
+                "partition": "/".join([layer, db, table, *parts]),
+                "file": index,
+                "schema": "demo-v1",
+                "rows": 3 + index,
+            }
+            path.write_text(json.dumps(payload, sort_keys=True) + "\n",
+                            encoding="utf-8", newline="\n")
         os.utime(path, (stamp, stamp))
     os.utime(directory, (stamp, stamp))
 
@@ -103,8 +122,9 @@ def generate(data_root: Path) -> dict:
     lake_root.mkdir(parents=True)
     usage_root.mkdir(parents=True)
     rows: list[dict] = []
-    for layer, db, table, parts, files, counts in PARTITIONS:
-        _write_partition(lake_root, layer, db, table, parts, files, data_root)
+    for layer, db, table, parts, files, counts, byte_size in PARTITIONS:
+        _write_partition(lake_root, layer, db, table, parts, files, data_root,
+                         byte_size)
         spec = "/".join(parts)
         rows.extend(_usage_rows(f"{db}.{table}", spec, counts))
     # A write-only access must not count as a read.

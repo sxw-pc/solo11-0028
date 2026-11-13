@@ -22,6 +22,35 @@
 </div>
 
 <h2>动作</h2>
+{% if plan.payload.capacity_profile %}
+<div class="panel">
+<h2>体积画像与容量压力</h2>
+<p class="muted">画像哈希 <code>{{ plan.payload.capacity_profile.profile_hash }}</code>
+· 画像异常 {{ plan.payload.capacity_profile.anomaly_count }}</p>
+<p>越限分区（不得留在 hot）：
+{% for pid in plan.payload.capacity_profile.oversize_partitions %}<code>{{ pid }}</code>{% else %}无{% endfor %}</p>
+{% set pressure = plan.payload.capacity_profile.pressure %}
+{% if pressure.table_budgets %}
+<table>
+  <tr><th>表</th><th>warm 预算</th><th>已驻留</th><th>预计占用</th><th>预算内</th></tr>
+  {% for row in pressure.table_budgets %}
+  <tr><td><code>{{ row.table }}</code></td><td>{{ row.max_warm_bytes|human_bytes }}</td>
+    <td>{{ row.resident_warm_bytes|human_bytes }}</td>
+    <td>{{ row.projected_warm_bytes|human_bytes }}</td>
+    <td class="{% if row.within_budget %}ok{% else %}bad{% endif %}">
+      {{ "是" if row.within_budget else "否" }}</td></tr>
+  {% endfor %}
+</table>
+{% endif %}
+{% if pressure.capacity_blocked %}
+<ul>
+{% for row in pressure.capacity_blocked %}
+  <li class="bad"><code>{{ row.partition_id }}</code>：{{ row.reason }}</li>
+{% endfor %}
+</ul>
+{% endif %}
+</div>
+{% endif %}
 <div class="panel">
 <table>
   <tr><th>#</th><th>动作</th><th>状态</th><th>分区</th><th>字节</th><th>路径</th></tr>

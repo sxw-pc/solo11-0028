@@ -67,6 +67,18 @@ def build_report(evaluation: dict[str, Any], plan: dict[str, Any],
          "reason": action.get("reason", "")}
         for action in plan_actions if action["action"] == "mark_purge"
     ]
+    capacity_profile = plan.get("capacity_profile")
+    capacity_view: dict[str, Any] | None = None
+    if capacity_profile:
+        pressure = capacity_profile.get("pressure", {})
+        capacity_view = {
+            "profile_hash": capacity_profile.get("profile_hash"),
+            "oversize_partitions": list(
+                capacity_profile.get("oversize_partitions", [])),
+            "anomaly_count": capacity_profile.get("anomaly_count", 0),
+            "capacity_blocked": pressure.get("capacity_blocked", []),
+            "table_budgets": pressure.get("table_budgets", []),
+        }
     batch_summary: dict[str, Any] | None = None
     if batch:
         action_status: dict[str, int] = {}
@@ -99,6 +111,7 @@ def build_report(evaluation: dict[str, Any], plan: dict[str, Any],
         "purge_reclaimable_bytes": sum(item["bytes"] for item in purge_list),
         "blocked_items": blocked,
         "purge_list": purge_list,
+        "capacity_profile": capacity_view,
         "action_summary": plan.get("summary", {}),
         "batch_summary": batch_summary,
     }
@@ -142,9 +155,34 @@ def render_markdown(report: dict[str, Any]) -> str:
         "",
         "> 本工具不做物理删除；purge 仅进入复核清单。",
         "",
-        "## 被阻断项",
-        "",
     ])
+    capacity = report.get("capacity_profile")
+    if capacity:
+        lines.extend([
+            "## 体积画像与容量压力",
+            "",
+            f"- 画像哈希：`{capacity['profile_hash']}`；画像异常数："
+            f"{capacity['anomaly_count']}",
+            f"- 越过 max_hot_bytes 的分区（不得留在 hot）："
+            f"{', '.join(f'`{_cell(p)}`' for p in capacity['oversize_partitions']) or '无'}",
+        ])
+        if capacity["table_budgets"]:
+            lines.extend(["", "| 表 | warm 预算 | 已驻留 | 预计占用 | 预算内 |",
+                          "| --- | ---: | ---: | ---: | --- |"])
+            for row in capacity["table_budgets"]:
+                lines.append(
+                    f"| `{_cell(row['table'])}` | {row['max_warm_bytes']} | "
+                    f"{row['resident_warm_bytes']} | "
+                    f"{row['projected_warm_bytes']} | "
+                    f"{'是' if row['within_budget'] else '否'} |")
+        if capacity["capacity_blocked"]:
+            lines.extend(["", "容量阻断（按缓解顺序：大而老优先，小而旧不一刀切）："])
+            for row in capacity["capacity_blocked"]:
+                lines.append(
+                    f"- `{_cell(row['partition_id'])}`（{row['bytes']} B）："
+                    f"{_cell(row['reason'])}")
+        lines.append("")
+    lines.extend(["## 被阻断项", ""])
     if report["blocked_items"]:
         lines.extend(["| 分区 | 原因 |", "| --- | --- |"])
         for item in report["blocked_items"]:
