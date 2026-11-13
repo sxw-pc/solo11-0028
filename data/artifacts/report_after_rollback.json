@@ -1,0 +1,147 @@
+{
+  "action_summary": {
+    "action_counts": {
+      "mark_purge": 2,
+      "move": 10,
+      "noop": 8
+    },
+    "blocked_actions": 0,
+    "partitions": 20,
+    "projected_release_bytes": 1427,
+    "purge_candidate_bytes": 191,
+    "ready_actions": 12,
+    "status_counts": {
+      "blocked": 0,
+      "noop": 8,
+      "ready": 12
+    }
+  },
+  "as_of": "2026-11-01T00:00:00Z",
+  "batch_summary": {
+    "action_count": 12,
+    "action_status": {
+      "rolled_back": 10,
+      "skipped": 8,
+      "unmarked": 2
+    },
+    "actor": "cli",
+    "batch_id": "batch-20261113T130308Z-428092",
+    "error": null,
+    "finished_at": "2026-11-13T13:03:08Z",
+    "marked_count": 2,
+    "moved_count": 10,
+    "rollbacks": [
+      {
+        "batch_id": "batch-20261113T130308Z-428092",
+        "created_at": "2026-11-13T13:03:08Z",
+        "detail": {
+          "actor": "cli",
+          "restored": [
+            {
+              "partition_id": "sales.orders.dt=2026-09-05",
+              "seq": 10,
+              "source": "hot/sales/orders/dt=2026-09-05",
+              "target": "warm/sales/orders/dt=2026-09-05"
+            },
+            {
+              "partition_id": "sales.orders.dt=2026-06-15",
+              "seq": 9,
+              "source": "hot/sales/orders/dt=2026-06-15",
+              "target": "cold/sales/orders/dt=2026-06-15"
+            },
+            {
+              "partition_id": "sales.orders.dt=2025-05-01",
+              "seq": 8,
+              "source": "warm/sales/orders/dt=2025-05-01",
+              "target": "cold/sales/orders/dt=2025-05-01"
+            },
+            {
+              "partition_id": "sales.order_items.dt=2026-09-20",
+              "seq": 7,
+              "source": "hot/sales/order_items/dt=2026-09-20",
+              "target": "warm/sales/order_items/dt=2026-09-20"
+            },
+            {
+              "partition_id": "sales.order_items.dt=2026-03-01",
+              "seq": 6,
+              "source": "hot/sales/order_items/dt=2026-03-01",
+              "target": "cold/sales/order_items/dt=2026-03-01"
+            },
+            {
+              "partition_id": "ops.audit_log.region=us/dt=2025-06-01",
+              "seq": 5,
+              "source": "hot/ops/audit_log/region=us/dt=2025-06-01",
+              "target": "cold/ops/audit_log/region=us/dt=2025-06-01"
+            },
+            {
+              "partition_id": "ops.audit_log.region=cn/dt=2026-07-01",
+              "seq": 4,
+              "source": "hot/ops/audit_log/region=cn/dt=2026-07-01",
+              "target": "warm/ops/audit_log/region=cn/dt=2026-07-01"
+            },
+            {
+              "partition_id": "marketing.events.dt=2026-10-05",
+              "seq": 3,
+              "source": "hot/marketing/events/dt=2026-10-05",
+              "target": "warm/marketing/events/dt=2026-10-05"
+            },
+            {
+              "partition_id": "marketing.events.dt=2026-08-20",
+              "seq": 2,
+              "source": "hot/marketing/events/dt=2026-08-20",
+              "target": "cold/marketing/events/dt=2026-08-20"
+            },
+            {
+              "partition_id": "finance.ledger.dt=2025-01-01",
+              "seq": 1,
+              "source": "warm/finance/ledger/dt=2025-01-01",
+              "target": "cold/finance/ledger/dt=2025-01-01"
+            }
+          ],
+          "unmarked_purge_actions": 2,
+          "unrecoverable": []
+        },
+        "restored_count": 10,
+        "rollback_id": 1,
+        "unrecoverable_count": 0
+      }
+    ],
+    "started_at": "2026-11-13T13:03:08Z",
+    "status": "rolled_back"
+  },
+  "blocked_items": [],
+  "current_layer_distribution": {
+    "cold": 2,
+    "hot": 14,
+    "warm": 4
+  },
+  "inventory_hash": "3faf96daf9b6094198acc07e9931417cee31670bf28e392c07d8b1007141f634",
+  "plan_hash": "35aec36de9275cced816d1da8e28cfda9cf4d55ca0e8bd00988855d65eb5d112",
+  "plan_id": "plan-35aec36de9275cce",
+  "policy_fingerprint": "fa4e21359265a31a99fd48ee55f5d6aca1ba3b8ecdee66226eb3412142ad45a8",
+  "projected_release_bytes": 1427,
+  "purge_list": [
+    {
+      "bytes": 96,
+      "file_count": 1,
+      "partition_id": "marketing.events.dt=2025-07-01",
+      "reason": "decision=purge_candidate; score=0",
+      "source": "warm/marketing/events/dt=2025-07-01"
+    },
+    {
+      "bytes": 95,
+      "file_count": 1,
+      "partition_id": "marketing.events.dt=2026-05-01",
+      "reason": "decision=purge_candidate; score=0",
+      "source": "hot/marketing/events/dt=2026-05-01"
+    }
+  ],
+  "purge_reclaimable_bytes": 191,
+  "schema_version": 1,
+  "tier_distribution": {
+    "cold": 8,
+    "hot": 5,
+    "purge_candidate": 2,
+    "warm": 5
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-01T00:00:00Z",
+  "batch": {
+    "action_count": 12,
+    "actor": "cli",
+    "batch_id": "batch-20261113T130308Z-428092",
+    "error": null,
+    "finished_at": "2026-11-13T13:03:08Z",
+    "marked_count": 2,
+    "moved_count": 10,
+    "plan_id": "plan-35aec36de9275cce",
+    "started_at": "2026-11-13T13:03:08Z",
+    "status": "completed"
+  },
+  "batch_id": "batch-20261113T130308Z-428092",
+  "free_bytes": 34943340544,
+  "marked_count": 2,
+  "mode": "apply",
+  "moved_count": 10,
+  "plan_hash": "35aec36de9275cced816d1da8e28cfda9cf4d55ca0e8bd00988855d65eb5d112",
+  "plan_id": "plan-35aec36de9275cce",
+  "ready_actions": 12,
+  "required_bytes": 1427,
+  "reserve_bytes": 1048576,
+  "status": "completed"
+}

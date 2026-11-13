@@ -1,0 +1,2117 @@
+{
+  "as_of": "2026-11-01T00:00:00Z",
+  "decisions": [
+    {
+      "age_days": 669,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=669d from partition_date; hot_retain_days=30",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=1095d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=365d=true; reads_30d<=0=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=60d=true; reads_30d<3=true; bytes>134217728=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=669d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "warm",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [
+        {
+          "match": "finance.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 50
+        }
+      ],
+      "never_accessed": true,
+      "partition_id": "finance.ledger.dt=2025-01-01",
+      "partition_parts": [
+        "dt=2025-01-01"
+      ],
+      "partition_spec": "dt=2025-01-01",
+      "policy": {
+        "cold_after_days": 365,
+        "cold_max_reads_30d": 0,
+        "hot_min_reads_30d": 3,
+        "hot_retain_days": 30,
+        "max_hot_bytes": 134217728,
+        "purge_after_days": 1095,
+        "purge_allowed": false,
+        "purge_idle_days": 730,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 60
+      },
+      "policy_sources": {
+        "cold_after_days": "finance.*",
+        "cold_max_reads_30d": "finance.*",
+        "hot_min_reads_30d": "finance.*",
+        "hot_retain_days": "finance.*",
+        "max_hot_bytes": "finance.*",
+        "purge_after_days": "finance.*",
+        "purge_allowed": "finance.*",
+        "purge_idle_days": "finance.*",
+        "purge_max_reads_30d": "finance.*",
+        "warm_after_days": "finance.*"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=669d from partition_date; hot_retain_days=30",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=1095d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=365d=true; reads_30d<=0=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "warm/finance/ledger/dt=2025-01-01",
+      "table": "finance.ledger",
+      "tier": "cold",
+      "total_bytes": 94
+    },
+    {
+      "age_days": 31,
+      "age_source": "partition_date",
+      "bytes_30d": 18799,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=31d from partition_date; hot_retain_days=30",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=1095d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=365d=false; reads_30d<=0=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=60d=false; reads_30d<3=false; bytes>134217728=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=31d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "finance.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 50
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "finance.ledger.dt=2026-10-01",
+      "partition_parts": [
+        "dt=2026-10-01"
+      ],
+      "partition_spec": "dt=2026-10-01",
+      "policy": {
+        "cold_after_days": 365,
+        "cold_max_reads_30d": 0,
+        "hot_min_reads_30d": 3,
+        "hot_retain_days": 30,
+        "max_hot_bytes": 134217728,
+        "purge_after_days": 1095,
+        "purge_allowed": false,
+        "purge_idle_days": 730,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 60
+      },
+      "policy_sources": {
+        "cold_after_days": "finance.*",
+        "cold_max_reads_30d": "finance.*",
+        "hot_min_reads_30d": "finance.*",
+        "hot_retain_days": "finance.*",
+        "max_hot_bytes": "finance.*",
+        "purge_after_days": "finance.*",
+        "purge_allowed": "finance.*",
+        "purge_idle_days": "finance.*",
+        "purge_max_reads_30d": "finance.*",
+        "warm_after_days": "finance.*"
+      },
+      "reads_30d": 11,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=31d from partition_date; hot_retain_days=30",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=1095d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=365d=false; reads_30d<=0=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=60d=false; reads_30d<3=false; bytes>134217728=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=31d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "score": 85,
+      "source_path": "hot/finance/ledger/dt=2026-10-01",
+      "table": "finance.ledger",
+      "tier": "hot",
+      "total_bytes": 186
+    },
+    {
+      "age_days": 488,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=488d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=true; reads_30d<=0=true; idle_ok=true",
+          "passed": true
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=488d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "warm",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": true,
+      "partition_id": "marketing.events.dt=2025-07-01",
+      "partition_parts": [
+        "dt=2025-07-01"
+      ],
+      "partition_spec": "dt=2025-07-01",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=488d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=true; reads_30d<=0=true; idle_ok=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "warm/marketing/events/dt=2025-07-01",
+      "table": "marketing.events",
+      "tier": "purge_candidate",
+      "total_bytes": 96
+    },
+    {
+      "age_days": 184,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=184d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=true; reads_30d<=0=true; idle_ok=true",
+          "passed": true
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=184d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": true,
+      "partition_id": "marketing.events.dt=2026-05-01",
+      "partition_parts": [
+        "dt=2026-05-01"
+      ],
+      "partition_spec": "dt=2026-05-01",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=184d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=true; reads_30d<=0=true; idle_ok=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "hot/marketing/events/dt=2026-05-01",
+      "table": "marketing.events",
+      "tier": "purge_candidate",
+      "total_bytes": 95
+    },
+    {
+      "age_days": 109,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=109d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=true; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=109d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "cold",
+      "file_count": 1,
+      "idle_days": 32,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "marketing.events.dt=2026-07-15",
+      "partition_parts": [
+        "dt=2026-07-15"
+      ],
+      "partition_spec": "dt=2026-07-15",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=109d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=true; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=true; reads_30d<=2=true",
+          "passed": true
+        }
+      ],
+      "score": 29,
+      "source_path": "cold/marketing/events/dt=2026-07-15",
+      "table": "marketing.events",
+      "tier": "cold",
+      "total_bytes": 96
+    },
+    {
+      "age_days": 73,
+      "age_source": "partition_date",
+      "bytes_30d": 1024,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=73d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=73d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 8,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "marketing.events.dt=2026-08-20",
+      "partition_parts": [
+        "dt=2026-08-20"
+      ],
+      "partition_spec": "dt=2026-08-20",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 1,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=73d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=true; reads_30d<=2=true",
+          "passed": true
+        }
+      ],
+      "score": 45,
+      "source_path": "hot/marketing/events/dt=2026-08-20",
+      "table": "marketing.events",
+      "tier": "cold",
+      "total_bytes": 190
+    },
+    {
+      "age_days": 52,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=52d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=true; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=false; reads_30d<=2=true",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=52d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "warm",
+      "file_count": 1,
+      "idle_days": 32,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "marketing.events.dt=2026-09-10",
+      "partition_parts": [
+        "dt=2026-09-10"
+      ],
+      "partition_spec": "dt=2026-09-10",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=52d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=true; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=false; reads_30d<=2=true",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        }
+      ],
+      "score": 29,
+      "source_path": "warm/marketing/events/dt=2026-09-10",
+      "table": "marketing.events",
+      "tier": "warm",
+      "total_bytes": 96
+    },
+    {
+      "age_days": 27,
+      "age_source": "partition_date",
+      "bytes_30d": 6490,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=27d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=27d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 1,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "marketing.events.dt=2026-10-05",
+      "partition_parts": [
+        "dt=2026-10-05"
+      ],
+      "partition_spec": "dt=2026-10-05",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 5,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=27d from partition_date; hot_retain_days=3",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=true; reads_30d<12=true; bytes>2097152=false",
+          "passed": true
+        }
+      ],
+      "score": 65,
+      "source_path": "hot/marketing/events/dt=2026-10-05",
+      "table": "marketing.events",
+      "tier": "warm",
+      "total_bytes": 95
+    },
+    {
+      "age_days": 1,
+      "age_source": "partition_date",
+      "bytes_30d": 26803,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=1d from partition_date; hot_retain_days=3",
+          "passed": true
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=true; age>=120d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=60d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=20d=false; reads_30d<12=false; bytes>2097152=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=1d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "marketing.*",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 20
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "marketing.events.dt=2026-10-31",
+      "partition_parts": [
+        "dt=2026-10-31"
+      ],
+      "partition_spec": "dt=2026-10-31",
+      "policy": {
+        "cold_after_days": 60,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 12,
+        "hot_retain_days": 3,
+        "max_hot_bytes": 2097152,
+        "purge_after_days": 120,
+        "purge_allowed": true,
+        "purge_idle_days": 45,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 20
+      },
+      "policy_sources": {
+        "cold_after_days": "marketing.*",
+        "cold_max_reads_30d": "marketing.*",
+        "hot_min_reads_30d": "marketing.*",
+        "hot_retain_days": "marketing.*",
+        "max_hot_bytes": "marketing.*",
+        "purge_after_days": "marketing.*",
+        "purge_allowed": "marketing.*",
+        "purge_idle_days": "marketing.*",
+        "purge_max_reads_30d": "marketing.*",
+        "warm_after_days": "marketing.*"
+      },
+      "reads_30d": 14,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=1d from partition_date; hot_retain_days=3",
+          "passed": true
+        }
+      ],
+      "score": 85,
+      "source_path": "hot/marketing/events/dt=2026-10-31",
+      "table": "marketing.events",
+      "tier": "hot",
+      "total_bytes": 190
+    },
+    {
+      "age_days": 123,
+      "age_source": "partition_date",
+      "bytes_30d": 3483,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=123d from partition_date; hot_retain_days=14",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=900d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=180d=false; reads_30d<=1=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=45d=true; reads_30d<4=true; bytes>67108864=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=123d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 1,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "ops.audit_log",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 30
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "ops.audit_log.region=cn/dt=2026-07-01",
+      "partition_parts": [
+        "region=cn",
+        "dt=2026-07-01"
+      ],
+      "partition_spec": "region=cn/dt=2026-07-01",
+      "policy": {
+        "cold_after_days": 180,
+        "cold_max_reads_30d": 1,
+        "hot_min_reads_30d": 4,
+        "hot_retain_days": 14,
+        "max_hot_bytes": 67108864,
+        "purge_after_days": 900,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 45
+      },
+      "policy_sources": {
+        "cold_after_days": "ops.audit_log",
+        "cold_max_reads_30d": "ops.audit_log",
+        "hot_min_reads_30d": "ops.audit_log",
+        "hot_retain_days": "ops.audit_log",
+        "max_hot_bytes": "ops.audit_log",
+        "purge_after_days": "ops.audit_log",
+        "purge_allowed": "ops.audit_log",
+        "purge_idle_days": "ops.audit_log",
+        "purge_max_reads_30d": "ops.audit_log",
+        "warm_after_days": "ops.audit_log"
+      },
+      "reads_30d": 3,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=123d from partition_date; hot_retain_days=14",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=900d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=180d=false; reads_30d<=1=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=45d=true; reads_30d<4=true; bytes>67108864=false",
+          "passed": true
+        }
+      ],
+      "score": 57,
+      "source_path": "hot/ops/audit_log/region=cn/dt=2026-07-01",
+      "table": "ops.audit_log",
+      "tier": "warm",
+      "total_bytes": 102
+    },
+    {
+      "age_days": 12,
+      "age_source": "partition_date",
+      "bytes_30d": 14148,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=12d from partition_date; hot_retain_days=14",
+          "passed": true
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=900d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=180d=false; reads_30d<=1=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=45d=false; reads_30d<4=false; bytes>67108864=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=12d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "ops.audit_log",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 30
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "ops.audit_log.region=cn/dt=2026-10-20",
+      "partition_parts": [
+        "region=cn",
+        "dt=2026-10-20"
+      ],
+      "partition_spec": "region=cn/dt=2026-10-20",
+      "policy": {
+        "cold_after_days": 180,
+        "cold_max_reads_30d": 1,
+        "hot_min_reads_30d": 4,
+        "hot_retain_days": 14,
+        "max_hot_bytes": 67108864,
+        "purge_after_days": 900,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 45
+      },
+      "policy_sources": {
+        "cold_after_days": "ops.audit_log",
+        "cold_max_reads_30d": "ops.audit_log",
+        "hot_min_reads_30d": "ops.audit_log",
+        "hot_retain_days": "ops.audit_log",
+        "max_hot_bytes": "ops.audit_log",
+        "purge_after_days": "ops.audit_log",
+        "purge_allowed": "ops.audit_log",
+        "purge_idle_days": "ops.audit_log",
+        "purge_max_reads_30d": "ops.audit_log",
+        "warm_after_days": "ops.audit_log"
+      },
+      "reads_30d": 9,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=12d from partition_date; hot_retain_days=14",
+          "passed": true
+        }
+      ],
+      "score": 81,
+      "source_path": "hot/ops/audit_log/region=cn/dt=2026-10-20",
+      "table": "ops.audit_log",
+      "tier": "hot",
+      "total_bytes": 204
+    },
+    {
+      "age_days": 518,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=518d from partition_date; hot_retain_days=14",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=900d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=180d=true; reads_30d<=1=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=45d=true; reads_30d<4=true; bytes>67108864=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=518d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [
+        {
+          "match": "ops.audit_log",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 30
+        }
+      ],
+      "never_accessed": true,
+      "partition_id": "ops.audit_log.region=us/dt=2025-06-01",
+      "partition_parts": [
+        "region=us",
+        "dt=2025-06-01"
+      ],
+      "partition_spec": "region=us/dt=2025-06-01",
+      "policy": {
+        "cold_after_days": 180,
+        "cold_max_reads_30d": 1,
+        "hot_min_reads_30d": 4,
+        "hot_retain_days": 14,
+        "max_hot_bytes": 67108864,
+        "purge_after_days": 900,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 45
+      },
+      "policy_sources": {
+        "cold_after_days": "ops.audit_log",
+        "cold_max_reads_30d": "ops.audit_log",
+        "hot_min_reads_30d": "ops.audit_log",
+        "hot_retain_days": "ops.audit_log",
+        "max_hot_bytes": "ops.audit_log",
+        "purge_after_days": "ops.audit_log",
+        "purge_allowed": "ops.audit_log",
+        "purge_idle_days": "ops.audit_log",
+        "purge_max_reads_30d": "ops.audit_log",
+        "warm_after_days": "ops.audit_log"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=518d from partition_date; hot_retain_days=14",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=900d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=180d=true; reads_30d<=1=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "hot/ops/audit_log/region=us/dt=2025-06-01",
+      "table": "ops.audit_log",
+      "tier": "cold",
+      "total_bytes": 102
+    },
+    {
+      "age_days": 245,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=245d from partition_date; hot_retain_days=7",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=365d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=90d=true; reads_30d<=1=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=30d=true; reads_30d<6=true; bytes>8388608=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=245d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [],
+      "never_accessed": true,
+      "partition_id": "sales.order_items.dt=2026-03-01",
+      "partition_parts": [
+        "dt=2026-03-01"
+      ],
+      "partition_spec": "dt=2026-03-01",
+      "policy": {
+        "cold_after_days": 90,
+        "cold_max_reads_30d": 1,
+        "hot_min_reads_30d": 6,
+        "hot_retain_days": 7,
+        "max_hot_bytes": 8388608,
+        "purge_after_days": 365,
+        "purge_allowed": false,
+        "purge_idle_days": 180,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 30
+      },
+      "policy_sources": {
+        "cold_after_days": "defaults",
+        "cold_max_reads_30d": "defaults",
+        "hot_min_reads_30d": "defaults",
+        "hot_retain_days": "defaults",
+        "max_hot_bytes": "defaults",
+        "purge_after_days": "defaults",
+        "purge_allowed": "defaults",
+        "purge_idle_days": "defaults",
+        "purge_max_reads_30d": "defaults",
+        "warm_after_days": "defaults"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=245d from partition_date; hot_retain_days=7",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=365d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=90d=true; reads_30d<=1=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "hot/sales/order_items/dt=2026-03-01",
+      "table": "sales.order_items",
+      "tier": "cold",
+      "total_bytes": 96
+    },
+    {
+      "age_days": 42,
+      "age_source": "partition_date",
+      "bytes_30d": 2185,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=42d from partition_date; hot_retain_days=7",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=365d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=90d=false; reads_30d<=1=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=30d=true; reads_30d<6=true; bytes>8388608=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=42d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 1,
+      "matched_rules": [],
+      "never_accessed": false,
+      "partition_id": "sales.order_items.dt=2026-09-20",
+      "partition_parts": [
+        "dt=2026-09-20"
+      ],
+      "partition_spec": "dt=2026-09-20",
+      "policy": {
+        "cold_after_days": 90,
+        "cold_max_reads_30d": 1,
+        "hot_min_reads_30d": 6,
+        "hot_retain_days": 7,
+        "max_hot_bytes": 8388608,
+        "purge_after_days": 365,
+        "purge_allowed": false,
+        "purge_idle_days": 180,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 30
+      },
+      "policy_sources": {
+        "cold_after_days": "defaults",
+        "cold_max_reads_30d": "defaults",
+        "hot_min_reads_30d": "defaults",
+        "hot_retain_days": "defaults",
+        "max_hot_bytes": "defaults",
+        "purge_after_days": "defaults",
+        "purge_allowed": "defaults",
+        "purge_idle_days": "defaults",
+        "purge_max_reads_30d": "defaults",
+        "warm_after_days": "defaults"
+      },
+      "reads_30d": 2,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=42d from partition_date; hot_retain_days=7",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=365d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=90d=false; reads_30d<=1=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=30d=true; reads_30d<6=true; bytes>8388608=false",
+          "passed": true
+        }
+      ],
+      "score": 53,
+      "source_path": "hot/sales/order_items/dt=2026-09-20",
+      "table": "sales.order_items",
+      "tier": "warm",
+      "total_bytes": 192
+    },
+    {
+      "age_days": 1035,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=1035d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=true; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=true; reads_30d<10=true; bytes>33554432=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=1035d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "cold",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [
+        {
+          "match": "sales.orders",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 40
+        }
+      ],
+      "never_accessed": true,
+      "partition_id": "sales.orders.dt=2024-01-01",
+      "partition_parts": [
+        "dt=2024-01-01"
+      ],
+      "partition_spec": "dt=2024-01-01",
+      "policy": {
+        "cold_after_days": 120,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 10,
+        "hot_retain_days": 10,
+        "max_hot_bytes": 33554432,
+        "purge_after_days": 730,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 35
+      },
+      "policy_sources": {
+        "cold_after_days": "sales.orders",
+        "cold_max_reads_30d": "sales.orders",
+        "hot_min_reads_30d": "sales.orders",
+        "hot_retain_days": "sales.orders",
+        "max_hot_bytes": "sales.orders",
+        "purge_after_days": "sales.orders",
+        "purge_allowed": "sales.orders",
+        "purge_idle_days": "sales.orders",
+        "purge_max_reads_30d": "sales.orders",
+        "warm_after_days": "sales.orders"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=1035d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=true; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=true; reads_30d<=2=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "cold/sales/orders/dt=2024-01-01",
+      "table": "sales.orders",
+      "tier": "cold",
+      "total_bytes": 92
+    },
+    {
+      "age_days": 549,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=549d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=true; reads_30d<10=true; bytes>33554432=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=549d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "warm",
+      "file_count": 1,
+      "idle_days": null,
+      "matched_rules": [
+        {
+          "match": "sales.orders",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 40
+        }
+      ],
+      "never_accessed": true,
+      "partition_id": "sales.orders.dt=2025-05-01",
+      "partition_parts": [
+        "dt=2025-05-01"
+      ],
+      "partition_spec": "dt=2025-05-01",
+      "policy": {
+        "cold_after_days": 120,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 10,
+        "hot_retain_days": 10,
+        "max_hot_bytes": 33554432,
+        "purge_after_days": 730,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 35
+      },
+      "policy_sources": {
+        "cold_after_days": "sales.orders",
+        "cold_max_reads_30d": "sales.orders",
+        "hot_min_reads_30d": "sales.orders",
+        "hot_retain_days": "sales.orders",
+        "max_hot_bytes": "sales.orders",
+        "purge_after_days": "sales.orders",
+        "purge_allowed": "sales.orders",
+        "purge_idle_days": "sales.orders",
+        "purge_max_reads_30d": "sales.orders",
+        "warm_after_days": "sales.orders"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=549d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=true; idle_ok=true",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=true; reads_30d<=2=true",
+          "passed": true
+        }
+      ],
+      "score": 0,
+      "source_path": "warm/sales/orders/dt=2025-05-01",
+      "table": "sales.orders",
+      "tier": "cold",
+      "total_bytes": 92
+    },
+    {
+      "age_days": 139,
+      "age_source": "partition_date",
+      "bytes_30d": 0,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=139d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=true; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=true; reads_30d<=2=true",
+          "passed": true
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=true; reads_30d<10=true; bytes>33554432=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=139d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 32,
+      "matched_rules": [
+        {
+          "match": "sales.orders",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 40
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "sales.orders.dt=2026-06-15",
+      "partition_parts": [
+        "dt=2026-06-15"
+      ],
+      "partition_spec": "dt=2026-06-15",
+      "policy": {
+        "cold_after_days": 120,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 10,
+        "hot_retain_days": 10,
+        "max_hot_bytes": 33554432,
+        "purge_after_days": 730,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 35
+      },
+      "policy_sources": {
+        "cold_after_days": "sales.orders",
+        "cold_max_reads_30d": "sales.orders",
+        "hot_min_reads_30d": "sales.orders",
+        "hot_retain_days": "sales.orders",
+        "max_hot_bytes": "sales.orders",
+        "purge_after_days": "sales.orders",
+        "purge_allowed": "sales.orders",
+        "purge_idle_days": "sales.orders",
+        "purge_max_reads_30d": "sales.orders",
+        "warm_after_days": "sales.orders"
+      },
+      "reads_30d": 0,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=139d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=true; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=true; reads_30d<=2=true",
+          "passed": true
+        }
+      ],
+      "score": 29,
+      "source_path": "hot/sales/orders/dt=2026-06-15",
+      "table": "sales.orders",
+      "tier": "cold",
+      "total_bytes": 182
+    },
+    {
+      "age_days": 57,
+      "age_source": "partition_date",
+      "bytes_30d": 4918,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=57d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=true; reads_30d<10=true; bytes>33554432=false",
+          "passed": true
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=57d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 1,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "sales.orders",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 40
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "sales.orders.dt=2026-09-05",
+      "partition_parts": [
+        "dt=2026-09-05"
+      ],
+      "partition_spec": "dt=2026-09-05",
+      "policy": {
+        "cold_after_days": 120,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 10,
+        "hot_retain_days": 10,
+        "max_hot_bytes": 33554432,
+        "purge_after_days": 730,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 35
+      },
+      "policy_sources": {
+        "cold_after_days": "sales.orders",
+        "cold_max_reads_30d": "sales.orders",
+        "hot_min_reads_30d": "sales.orders",
+        "hot_retain_days": "sales.orders",
+        "max_hot_bytes": "sales.orders",
+        "purge_after_days": "sales.orders",
+        "purge_allowed": "sales.orders",
+        "purge_idle_days": "sales.orders",
+        "purge_max_reads_30d": "sales.orders",
+        "warm_after_days": "sales.orders"
+      },
+      "reads_30d": 4,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=57d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=true; reads_30d<10=true; bytes>33554432=false",
+          "passed": true
+        }
+      ],
+      "score": 61,
+      "source_path": "hot/sales/orders/dt=2026-09-05",
+      "table": "sales.orders",
+      "tier": "warm",
+      "total_bytes": 91
+    },
+    {
+      "age_days": 22,
+      "age_source": "partition_date",
+      "bytes_30d": 32824,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=22d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=false; reads_30d<10=false; bytes>33554432=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=22d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "sales.orders",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 40
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "sales.orders.dt=2026-10-10",
+      "partition_parts": [
+        "dt=2026-10-10"
+      ],
+      "partition_spec": "dt=2026-10-10",
+      "policy": {
+        "cold_after_days": 120,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 10,
+        "hot_retain_days": 10,
+        "max_hot_bytes": 33554432,
+        "purge_after_days": 730,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 35
+      },
+      "policy_sources": {
+        "cold_after_days": "sales.orders",
+        "cold_max_reads_30d": "sales.orders",
+        "hot_min_reads_30d": "sales.orders",
+        "hot_retain_days": "sales.orders",
+        "max_hot_bytes": "sales.orders",
+        "purge_after_days": "sales.orders",
+        "purge_allowed": "sales.orders",
+        "purge_idle_days": "sales.orders",
+        "purge_max_reads_30d": "sales.orders",
+        "warm_after_days": "sales.orders"
+      },
+      "reads_30d": 16,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=22d from partition_date; hot_retain_days=10",
+          "passed": false
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=false; reads_30d<10=false; bytes>33554432=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=22d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "score": 85,
+      "source_path": "hot/sales/orders/dt=2026-10-10",
+      "table": "sales.orders",
+      "tier": "hot",
+      "total_bytes": 182
+    },
+    {
+      "age_days": 4,
+      "age_source": "partition_date",
+      "bytes_30d": 62388,
+      "checks": [
+        {
+          "check": "retention_floor",
+          "detail": "age=4d from partition_date; hot_retain_days=10",
+          "passed": true
+        },
+        {
+          "check": "purge_window",
+          "detail": "allowed=false; age>=730d=false; reads_30d<=0=false; idle_ok=false",
+          "passed": false
+        },
+        {
+          "check": "cold_threshold",
+          "detail": "age>=120d=false; reads_30d<=2=false",
+          "passed": false
+        },
+        {
+          "check": "warm_threshold",
+          "detail": "age>=35d=false; reads_30d<10=false; bytes>33554432=false",
+          "passed": false
+        },
+        {
+          "check": "hot_default",
+          "detail": "age=4d; cold/purge checks did not demote the partition",
+          "passed": true
+        }
+      ],
+      "current_layer": "hot",
+      "file_count": 2,
+      "idle_days": 1,
+      "matched_rules": [
+        {
+          "match": "sales.orders",
+          "overrides": [
+            "hot_retain_days",
+            "hot_min_reads_30d",
+            "warm_after_days",
+            "cold_after_days",
+            "cold_max_reads_30d",
+            "purge_after_days",
+            "purge_idle_days",
+            "purge_max_reads_30d",
+            "purge_allowed",
+            "max_hot_bytes"
+          ],
+          "priority": 40
+        }
+      ],
+      "never_accessed": false,
+      "partition_id": "sales.orders.dt=2026-10-28",
+      "partition_parts": [
+        "dt=2026-10-28"
+      ],
+      "partition_spec": "dt=2026-10-28",
+      "policy": {
+        "cold_after_days": 120,
+        "cold_max_reads_30d": 2,
+        "hot_min_reads_30d": 10,
+        "hot_retain_days": 10,
+        "max_hot_bytes": 33554432,
+        "purge_after_days": 730,
+        "purge_allowed": false,
+        "purge_idle_days": 365,
+        "purge_max_reads_30d": 0,
+        "warm_after_days": 35
+      },
+      "policy_sources": {
+        "cold_after_days": "sales.orders",
+        "cold_max_reads_30d": "sales.orders",
+        "hot_min_reads_30d": "sales.orders",
+        "hot_retain_days": "sales.orders",
+        "max_hot_bytes": "sales.orders",
+        "purge_after_days": "sales.orders",
+        "purge_allowed": "sales.orders",
+        "purge_idle_days": "sales.orders",
+        "purge_max_reads_30d": "sales.orders",
+        "warm_after_days": "sales.orders"
+      },
+      "reads_30d": 24,
+      "reasons": [
+        {
+          "check": "retention_floor",
+          "detail": "age=4d from partition_date; hot_retain_days=10",
+          "passed": true
+        }
+      ],
+      "score": 85,
+      "source_path": "hot/sales/orders/dt=2026-10-28",
+      "table": "sales.orders",
+      "tier": "hot",
+      "total_bytes": 182
+    }
+  ],
+  "inventory_hash": "3faf96daf9b6094198acc07e9931417cee31670bf28e392c07d8b1007141f634",
+  "policy_fingerprint": "fa4e21359265a31a99fd48ee55f5d6aca1ba3b8ecdee66226eb3412142ad45a8",
+  "schema_version": 1,
+  "summary": {
+    "decision_bytes": {
+      "cold": 944,
+      "hot": 944,
+      "purge_candidate": 191,
+      "warm": 576
+    },
+    "partitions": 20,
+    "tier_distribution": {
+      "cold": 8,
+      "hot": 5,
+      "purge_candidate": 2,
+      "warm": 5
+    }
+  }
+}

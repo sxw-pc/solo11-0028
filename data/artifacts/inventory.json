@@ -1,0 +1,546 @@
+{
+  "inventory_hash": "3faf96daf9b6094198acc07e9931417cee31670bf28e392c07d8b1007141f634",
+  "layout": "tiered-v1",
+  "partitions": [
+    {
+      "date": "2025-01-01",
+      "db": "finance",
+      "file_count": 1,
+      "keys": {
+        "dt": "2025-01-01"
+      },
+      "largest_file": {
+        "bytes": 94,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2025-01-01T12:00:00Z",
+      "layer": "warm",
+      "partition_id": "finance.ledger.dt=2025-01-01",
+      "partition_parts": [
+        "dt=2025-01-01"
+      ],
+      "partition_spec": "dt=2025-01-01",
+      "path": "warm/finance/ledger/dt=2025-01-01",
+      "table": "ledger",
+      "table_name": "finance.ledger",
+      "total_bytes": 94
+    },
+    {
+      "date": "2026-10-01",
+      "db": "finance",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-10-01"
+      },
+      "largest_file": {
+        "bytes": 93,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-10-01T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "finance.ledger.dt=2026-10-01",
+      "partition_parts": [
+        "dt=2026-10-01"
+      ],
+      "partition_spec": "dt=2026-10-01",
+      "path": "hot/finance/ledger/dt=2026-10-01",
+      "table": "ledger",
+      "table_name": "finance.ledger",
+      "total_bytes": 186
+    },
+    {
+      "date": "2025-07-01",
+      "db": "marketing",
+      "file_count": 1,
+      "keys": {
+        "dt": "2025-07-01"
+      },
+      "largest_file": {
+        "bytes": 96,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2025-07-01T12:00:00Z",
+      "layer": "warm",
+      "partition_id": "marketing.events.dt=2025-07-01",
+      "partition_parts": [
+        "dt=2025-07-01"
+      ],
+      "partition_spec": "dt=2025-07-01",
+      "path": "warm/marketing/events/dt=2025-07-01",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 96
+    },
+    {
+      "date": "2026-05-01",
+      "db": "marketing",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-05-01"
+      },
+      "largest_file": {
+        "bytes": 95,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-05-01T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "marketing.events.dt=2026-05-01",
+      "partition_parts": [
+        "dt=2026-05-01"
+      ],
+      "partition_spec": "dt=2026-05-01",
+      "path": "hot/marketing/events/dt=2026-05-01",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 95
+    },
+    {
+      "date": "2026-07-15",
+      "db": "marketing",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-07-15"
+      },
+      "largest_file": {
+        "bytes": 96,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-07-15T12:00:00Z",
+      "layer": "cold",
+      "partition_id": "marketing.events.dt=2026-07-15",
+      "partition_parts": [
+        "dt=2026-07-15"
+      ],
+      "partition_spec": "dt=2026-07-15",
+      "path": "cold/marketing/events/dt=2026-07-15",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 96
+    },
+    {
+      "date": "2026-08-20",
+      "db": "marketing",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-08-20"
+      },
+      "largest_file": {
+        "bytes": 95,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-08-20T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "marketing.events.dt=2026-08-20",
+      "partition_parts": [
+        "dt=2026-08-20"
+      ],
+      "partition_spec": "dt=2026-08-20",
+      "path": "hot/marketing/events/dt=2026-08-20",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 190
+    },
+    {
+      "date": "2026-09-10",
+      "db": "marketing",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-09-10"
+      },
+      "largest_file": {
+        "bytes": 96,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-09-10T12:00:00Z",
+      "layer": "warm",
+      "partition_id": "marketing.events.dt=2026-09-10",
+      "partition_parts": [
+        "dt=2026-09-10"
+      ],
+      "partition_spec": "dt=2026-09-10",
+      "path": "warm/marketing/events/dt=2026-09-10",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 96
+    },
+    {
+      "date": "2026-10-05",
+      "db": "marketing",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-10-05"
+      },
+      "largest_file": {
+        "bytes": 95,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-10-05T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "marketing.events.dt=2026-10-05",
+      "partition_parts": [
+        "dt=2026-10-05"
+      ],
+      "partition_spec": "dt=2026-10-05",
+      "path": "hot/marketing/events/dt=2026-10-05",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 95
+    },
+    {
+      "date": "2026-10-31",
+      "db": "marketing",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-10-31"
+      },
+      "largest_file": {
+        "bytes": 95,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-10-31T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "marketing.events.dt=2026-10-31",
+      "partition_parts": [
+        "dt=2026-10-31"
+      ],
+      "partition_spec": "dt=2026-10-31",
+      "path": "hot/marketing/events/dt=2026-10-31",
+      "table": "events",
+      "table_name": "marketing.events",
+      "total_bytes": 190
+    },
+    {
+      "date": "2026-07-01",
+      "db": "ops",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-07-01",
+        "region": "cn"
+      },
+      "largest_file": {
+        "bytes": 102,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-07-01T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "ops.audit_log.region=cn/dt=2026-07-01",
+      "partition_parts": [
+        "region=cn",
+        "dt=2026-07-01"
+      ],
+      "partition_spec": "region=cn/dt=2026-07-01",
+      "path": "hot/ops/audit_log/region=cn/dt=2026-07-01",
+      "table": "audit_log",
+      "table_name": "ops.audit_log",
+      "total_bytes": 102
+    },
+    {
+      "date": "2026-10-20",
+      "db": "ops",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-10-20",
+        "region": "cn"
+      },
+      "largest_file": {
+        "bytes": 102,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-10-20T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "ops.audit_log.region=cn/dt=2026-10-20",
+      "partition_parts": [
+        "region=cn",
+        "dt=2026-10-20"
+      ],
+      "partition_spec": "region=cn/dt=2026-10-20",
+      "path": "hot/ops/audit_log/region=cn/dt=2026-10-20",
+      "table": "audit_log",
+      "table_name": "ops.audit_log",
+      "total_bytes": 204
+    },
+    {
+      "date": "2025-06-01",
+      "db": "ops",
+      "file_count": 1,
+      "keys": {
+        "dt": "2025-06-01",
+        "region": "us"
+      },
+      "largest_file": {
+        "bytes": 102,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2025-06-01T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "ops.audit_log.region=us/dt=2025-06-01",
+      "partition_parts": [
+        "region=us",
+        "dt=2025-06-01"
+      ],
+      "partition_spec": "region=us/dt=2025-06-01",
+      "path": "hot/ops/audit_log/region=us/dt=2025-06-01",
+      "table": "audit_log",
+      "table_name": "ops.audit_log",
+      "total_bytes": 102
+    },
+    {
+      "date": "2026-03-01",
+      "db": "sales",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-03-01"
+      },
+      "largest_file": {
+        "bytes": 96,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-03-01T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "sales.order_items.dt=2026-03-01",
+      "partition_parts": [
+        "dt=2026-03-01"
+      ],
+      "partition_spec": "dt=2026-03-01",
+      "path": "hot/sales/order_items/dt=2026-03-01",
+      "table": "order_items",
+      "table_name": "sales.order_items",
+      "total_bytes": 96
+    },
+    {
+      "date": "2026-09-20",
+      "db": "sales",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-09-20"
+      },
+      "largest_file": {
+        "bytes": 96,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-09-20T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "sales.order_items.dt=2026-09-20",
+      "partition_parts": [
+        "dt=2026-09-20"
+      ],
+      "partition_spec": "dt=2026-09-20",
+      "path": "hot/sales/order_items/dt=2026-09-20",
+      "table": "order_items",
+      "table_name": "sales.order_items",
+      "total_bytes": 192
+    },
+    {
+      "date": "2024-01-01",
+      "db": "sales",
+      "file_count": 1,
+      "keys": {
+        "dt": "2024-01-01"
+      },
+      "largest_file": {
+        "bytes": 92,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2024-01-01T12:00:00Z",
+      "layer": "cold",
+      "partition_id": "sales.orders.dt=2024-01-01",
+      "partition_parts": [
+        "dt=2024-01-01"
+      ],
+      "partition_spec": "dt=2024-01-01",
+      "path": "cold/sales/orders/dt=2024-01-01",
+      "table": "orders",
+      "table_name": "sales.orders",
+      "total_bytes": 92
+    },
+    {
+      "date": "2025-05-01",
+      "db": "sales",
+      "file_count": 1,
+      "keys": {
+        "dt": "2025-05-01"
+      },
+      "largest_file": {
+        "bytes": 92,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2025-05-01T12:00:00Z",
+      "layer": "warm",
+      "partition_id": "sales.orders.dt=2025-05-01",
+      "partition_parts": [
+        "dt=2025-05-01"
+      ],
+      "partition_spec": "dt=2025-05-01",
+      "path": "warm/sales/orders/dt=2025-05-01",
+      "table": "orders",
+      "table_name": "sales.orders",
+      "total_bytes": 92
+    },
+    {
+      "date": "2026-06-15",
+      "db": "sales",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-06-15"
+      },
+      "largest_file": {
+        "bytes": 91,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-06-15T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "sales.orders.dt=2026-06-15",
+      "partition_parts": [
+        "dt=2026-06-15"
+      ],
+      "partition_spec": "dt=2026-06-15",
+      "path": "hot/sales/orders/dt=2026-06-15",
+      "table": "orders",
+      "table_name": "sales.orders",
+      "total_bytes": 182
+    },
+    {
+      "date": "2026-09-05",
+      "db": "sales",
+      "file_count": 1,
+      "keys": {
+        "dt": "2026-09-05"
+      },
+      "largest_file": {
+        "bytes": 91,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-09-05T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "sales.orders.dt=2026-09-05",
+      "partition_parts": [
+        "dt=2026-09-05"
+      ],
+      "partition_spec": "dt=2026-09-05",
+      "path": "hot/sales/orders/dt=2026-09-05",
+      "table": "orders",
+      "table_name": "sales.orders",
+      "total_bytes": 91
+    },
+    {
+      "date": "2026-10-10",
+      "db": "sales",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-10-10"
+      },
+      "largest_file": {
+        "bytes": 91,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-10-10T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "sales.orders.dt=2026-10-10",
+      "partition_parts": [
+        "dt=2026-10-10"
+      ],
+      "partition_spec": "dt=2026-10-10",
+      "path": "hot/sales/orders/dt=2026-10-10",
+      "table": "orders",
+      "table_name": "sales.orders",
+      "total_bytes": 182
+    },
+    {
+      "date": "2026-10-28",
+      "db": "sales",
+      "file_count": 2,
+      "keys": {
+        "dt": "2026-10-28"
+      },
+      "largest_file": {
+        "bytes": 91,
+        "name": "part-0000.json"
+      },
+      "last_modified": "2026-10-28T12:00:00Z",
+      "layer": "hot",
+      "partition_id": "sales.orders.dt=2026-10-28",
+      "partition_parts": [
+        "dt=2026-10-28"
+      ],
+      "partition_spec": "dt=2026-10-28",
+      "path": "hot/sales/orders/dt=2026-10-28",
+      "table": "orders",
+      "table_name": "sales.orders",
+      "total_bytes": 182
+    }
+  ],
+  "schema_version": 1,
+  "tables": [
+    {
+      "db": "marketing",
+      "layer": "cold",
+      "partition_count": 1,
+      "table": "events",
+      "total_bytes": 96
+    },
+    {
+      "db": "sales",
+      "layer": "cold",
+      "partition_count": 1,
+      "table": "orders",
+      "total_bytes": 92
+    },
+    {
+      "db": "finance",
+      "layer": "hot",
+      "partition_count": 1,
+      "table": "ledger",
+      "total_bytes": 186
+    },
+    {
+      "db": "marketing",
+      "layer": "hot",
+      "partition_count": 4,
+      "table": "events",
+      "total_bytes": 570
+    },
+    {
+      "db": "ops",
+      "layer": "hot",
+      "partition_count": 3,
+      "table": "audit_log",
+      "total_bytes": 408
+    },
+    {
+      "db": "sales",
+      "layer": "hot",
+      "partition_count": 2,
+      "table": "order_items",
+      "total_bytes": 288
+    },
+    {
+      "db": "sales",
+      "layer": "hot",
+      "partition_count": 4,
+      "table": "orders",
+      "total_bytes": 637
+    },
+    {
+      "db": "finance",
+      "layer": "warm",
+      "partition_count": 1,
+      "table": "ledger",
+      "total_bytes": 94
+    },
+    {
+      "db": "marketing",
+      "layer": "warm",
+      "partition_count": 2,
+      "table": "events",
+      "total_bytes": 192
+    },
+    {
+      "db": "sales",
+      "layer": "warm",
+      "partition_count": 1,
+      "table": "orders",
+      "total_bytes": 92
+    }
+  ],
+  "unparsed": []
+}

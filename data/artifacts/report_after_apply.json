@@ -1,0 +1,72 @@
+{
+  "action_summary": {
+    "action_counts": {
+      "mark_purge": 2,
+      "move": 10,
+      "noop": 8
+    },
+    "blocked_actions": 0,
+    "partitions": 20,
+    "projected_release_bytes": 1427,
+    "purge_candidate_bytes": 191,
+    "ready_actions": 12,
+    "status_counts": {
+      "blocked": 0,
+      "noop": 8,
+      "ready": 12
+    }
+  },
+  "as_of": "2026-11-01T00:00:00Z",
+  "batch_summary": {
+    "action_count": 12,
+    "action_status": {
+      "marked": 2,
+      "moved": 10,
+      "skipped": 8
+    },
+    "actor": "cli",
+    "batch_id": "batch-20261113T130308Z-428092",
+    "error": null,
+    "finished_at": "2026-11-13T13:03:08Z",
+    "marked_count": 2,
+    "moved_count": 10,
+    "rollbacks": [],
+    "started_at": "2026-11-13T13:03:08Z",
+    "status": "completed"
+  },
+  "blocked_items": [],
+  "current_layer_distribution": {
+    "cold": 2,
+    "hot": 14,
+    "warm": 4
+  },
+  "inventory_hash": "3faf96daf9b6094198acc07e9931417cee31670bf28e392c07d8b1007141f634",
+  "plan_hash": "35aec36de9275cced816d1da8e28cfda9cf4d55ca0e8bd00988855d65eb5d112",
+  "plan_id": "plan-35aec36de9275cce",
+  "policy_fingerprint": "fa4e21359265a31a99fd48ee55f5d6aca1ba3b8ecdee66226eb3412142ad45a8",
+  "projected_release_bytes": 1427,
+  "purge_list": [
+    {
+      "bytes": 96,
+      "file_count": 1,
+      "partition_id": "marketing.events.dt=2025-07-01",
+      "reason": "decision=purge_candidate; score=0",
+      "source": "warm/marketing/events/dt=2025-07-01"
+    },
+    {
+      "bytes": 95,
+      "file_count": 1,
+      "partition_id": "marketing.events.dt=2026-05-01",
+      "reason": "decision=purge_candidate; score=0",
+      "source": "hot/marketing/events/dt=2026-05-01"
+    }
+  ],
+  "purge_reclaimable_bytes": 191,
+  "schema_version": 1,
+  "tier_distribution": {
+    "cold": 8,
+    "hot": 5,
+    "purge_candidate": 2,
+    "warm": 5
+  }
+}

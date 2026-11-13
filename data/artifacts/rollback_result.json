@@ -1,0 +1,75 @@
+{
+  "batch_id": "batch-20261113T130308Z-428092",
+  "detail": {
+    "actor": "cli",
+    "restored": [
+      {
+        "partition_id": "sales.orders.dt=2026-09-05",
+        "seq": 10,
+        "source": "hot/sales/orders/dt=2026-09-05",
+        "target": "warm/sales/orders/dt=2026-09-05"
+      },
+      {
+        "partition_id": "sales.orders.dt=2026-06-15",
+        "seq": 9,
+        "source": "hot/sales/orders/dt=2026-06-15",
+        "target": "cold/sales/orders/dt=2026-06-15"
+      },
+      {
+        "partition_id": "sales.orders.dt=2025-05-01",
+        "seq": 8,
+        "source": "warm/sales/orders/dt=2025-05-01",
+        "target": "cold/sales/orders/dt=2025-05-01"
+      },
+      {
+        "partition_id": "sales.order_items.dt=2026-09-20",
+        "seq": 7,
+        "source": "hot/sales/order_items/dt=2026-09-20",
+        "target": "warm/sales/order_items/dt=2026-09-20"
+      },
+      {
+        "partition_id": "sales.order_items.dt=2026-03-01",
+        "seq": 6,
+        "source": "hot/sales/order_items/dt=2026-03-01",
+        "target": "cold/sales/order_items/dt=2026-03-01"
+      },
+      {
+        "partition_id": "ops.audit_log.region=us/dt=2025-06-01",
+        "seq": 5,
+        "source": "hot/ops/audit_log/region=us/dt=2025-06-01",
+        "target": "cold/ops/audit_log/region=us/dt=2025-06-01"
+      },
+      {
+        "partition_id": "ops.audit_log.region=cn/dt=2026-07-01",
+        "seq": 4,
+        "source": "hot/ops/audit_log/region=cn/dt=2026-07-01",
+        "target": "warm/ops/audit_log/region=cn/dt=2026-07-01"
+      },
+      {
+        "partition_id": "marketing.events.dt=2026-10-05",
+        "seq": 3,
+        "source": "hot/marketing/events/dt=2026-10-05",
+        "target": "warm/marketing/events/dt=2026-10-05"
+      },
+      {
+        "partition_id": "marketing.events.dt=2026-08-20",
+        "seq": 2,
+        "source": "hot/marketing/events/dt=2026-08-20",
+        "target": "cold/marketing/events/dt=2026-08-20"
+      },
+      {
+        "partition_id": "finance.ledger.dt=2025-01-01",
+        "seq": 1,
+        "source": "warm/finance/ledger/dt=2025-01-01",
+        "target": "cold/finance/ledger/dt=2025-01-01"
+      }
+    ],
+    "unmarked_purge_actions": 2,
+    "unrecoverable": []
+  },
+  "restored_count": 10,
+  "status": "rolled_back",
+  "unmarked_purge_count": 2,
+  "unrecoverable": [],
+  "unrecoverable_count": 0
+}
