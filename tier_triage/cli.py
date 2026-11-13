@@ -10,7 +10,11 @@ from typing import Any
 from tier_triage.audit.ledger import Ledger
 from tier_triage.audit.report import build_report, write_reports
 from tier_triage.decide.planner import build_plan, load_plan, save_plan
-from tier_triage.decide.scorer import evaluate_inventory, explain_decision
+from tier_triage.decide.scorer import (
+    evaluate_inventory,
+    explain_decision,
+    render_explanation,
+)
 from tier_triage.exec.executor import ExecutionError, execute_plan
 from tier_triage.exec.rollback import RollbackError, rollback_batch
 from tier_triage.lake.inventory import scan_lake
@@ -127,7 +131,10 @@ def _cmd_evaluate(args: argparse.Namespace) -> int:
             "tier_distribution": evaluation["summary"]["tier_distribution"],
             "policy_fingerprint": policy.fingerprint})
     if args.explain:
-        _print(explain_decision(evaluation, args.explain))
+        decision = explain_decision(evaluation, args.explain)
+        explanation = render_explanation(decision)
+        print(explanation["text"])
+        _print(explanation)
     return 0
 
 

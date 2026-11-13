@@ -32,8 +32,62 @@ def matching_rules(policy_data: dict[str, Any], table: str) -> list[dict[str, An
     return sorted(matches, key=lambda rule: (rule["priority"], rule["match"]))
 
 
+def build_rule_trace(policy_data: dict[str, Any], table: str,
+                     rules: list[dict[str, Any]],
+                     matched: list[dict[str, Any]]) -> dict[str, Any]:
+    """Record candidate hits and the per-field override order for one table.
+
+    The application order is byte-for-byte the same ``rules`` list that
+    :func:`resolve_policy` merges: ascending ``(priority, match)``.  A higher
+    priority or, at equal priority, a lexicographically greater ``match``
+    therefore appears later in each field chain and wins.
+    """
+    defaults = policy_data["defaults"]
+    field_chains: dict[str, list[dict[str, Any]]] = {
+        field: [{"order": 0, "source": "defaults", "value": defaults[field]}]
+        for field in CONFIG_FIELDS
+    }
+    candidates: list[dict[str, Any]] = []
+    for order, rule in enumerate(rules, start=1):
+        fields = [field for field in CONFIG_FIELDS if field in rule]
+        candidates.append({
+            "order": order,
+            "match": rule["match"],
+            "priority": rule["priority"],
+            "description": rule.get("description"),
+            "fields": fields,
+            "values": {field: rule[field] for field in fields},
+        })
+        for field in fields:
+            field_chains[field].append({
+                "order": order,
+                "source": rule["match"],
+                "priority": rule["priority"],
+                "value": rule[field],
+            })
+    for field, chain in field_chains.items():
+        for entry in chain[:-1]:
+            entry["effective"] = False
+        chain[-1]["effective"] = True
+    return {
+        "schema_version": 1,
+        "degraded": False,
+        "table": table,
+        "ordering": "ascending (priority, match); later overrides earlier",
+        "defaults": {field: defaults[field] for field in CONFIG_FIELDS},
+        "candidates": candidates,
+        "matched_high_to_low": matched,
+        "field_chains": field_chains,
+    }
+
+
 def resolve_policy(policy_data: dict[str, Any], table: str) -> dict[str, Any]:
-    """Merge defaults and matching overrides into one effective config."""
+    """Merge defaults and matching overrides into one effective config.
+
+    The merge order is unchanged; ``trace`` only observes it.  If the trace
+    cannot be built, the effective config, provenance and ``matched`` list stay
+    authoritative and the trace is marked degraded instead of raising.
+    """
     config = {field: policy_data["defaults"][field] for field in CONFIG_FIELDS}
     provenance = {field: "defaults" for field in CONFIG_FIELDS}
     rules = matching_rules(policy_data, table)
@@ -51,11 +105,22 @@ def resolve_policy(policy_data: dict[str, Any], table: str) -> dict[str, Any]:
         for rule in sorted(
             rules, key=lambda rule: (-rule["priority"], rule["match"]))
     ]
+    try:
+        trace = build_rule_trace(policy_data, table, rules, matched)
+    except Exception as exc:  # trace must never block evaluation
+        trace = {
+            "schema_version": 1,
+            "degraded": True,
+            "table": table,
+            "stage": "policy_merge",
+            "error": f"{type(exc).__name__}: {exc}",
+        }
     return {
         "table": table,
         "config": config,
         "provenance": provenance,
         "matched": matched,
+        "trace": trace,
     }
 
 

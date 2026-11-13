@@ -23,7 +23,25 @@ tables:
     purge_after_days: 120
 ```
 
-## 2. 判定顺序
+## 2. 溯源链（trace）
+
+每次评估的每条判定在 `trace` 中记录判定过程，**只观察、不参与判定**，因此
+不会改变任何结论、`plan_hash` 或 planner 的输入：
+
+- `policy.candidates`：按实际覆盖顺序（`(priority, match)` 升序）列出的候选
+  规则命中，含 `priority`、`match`、覆盖字段与取值；
+- `policy.field_chains`：逐字段从 `defaults` 到各命中级联的覆盖顺序，最后一
+  项为 `effective: true`；只走 defaults 的字段链长为 1；
+- `nodes`：按判定固定顺序（保留期 → purge → cold → warm → hot 兜底）的五个
+  决策节点，`outcome` 为 `adopted`（决定结论）、`rejected`（条件不成立，列
+  出 `vetoes`）或 `shadowed`（条件成立但被更早节点遮蔽）；
+- `config_sources`：每个生效字段的最终取值及其来源规则；
+- `degraded` / `stage` / `error`：溯源构建失败时降级为记录，绝不让 evaluate
+  失败。
+
+`--explain <partition>` 会打印这条链的可读文本。
+
+## 3. 判定顺序
 
 判定严格按以下顺序执行，前一步成立即确定层级；完整检查记录在 `checks`，
 决定性理由记录在 `reasons`：
@@ -45,12 +63,12 @@ tables:
 截断为 0 天。`reads_30d` 只计读操作且窗口为左闭右闭
 `[as_of-30d, as_of]`。
 
-## 3. 计分
+## 4. 计分
 
 `score` 只是排序/观察辅助，不改变上述规则。它由 30 天读次数、空闲天数和
 30 天读字节合成，范围 0–100，截断为整数，不含随机或当前时间因素。
 
-## 4. 边界与约束
+## 5. 边界与约束
 
 - `windows` 必须严格递增、全为正整数且包含 `30`，否则策略加载失败。
 - `defaults` 的 10 个字段必须齐全；未知字段、错误类型、负值均失败，错误
@@ -63,7 +81,7 @@ tables:
 - 同一表多个规则可分别覆盖不同字段；不建议让高优先级规则只覆盖部分相关
   阈值而不覆盖配套阈值。
 
-## 5. 示例策略
+## 6. 示例策略
 
 `config/policy.yaml` 中：
 

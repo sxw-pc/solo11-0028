@@ -8,7 +8,7 @@
 | 访问统计 Usage | `reads_Nd`、`bytes_Nd`、`last_access`、`idle_days`、`never_accessed` | 仅统计 `read/scan/select`，且时间戳不晚于评估时钟 |
 | 快照 Snapshot | `snapshot_id`、`inventory_hash`、`inventory_json` | 扫描结果的稳定摘要；`snapshot_id = snap-<hash 前 16 位>` |
 | 策略 Policy | `fingerprint`、`defaults`、`tables`、`windows` | 严格 schema 校验；指纹是规范化 YAML 数据的 SHA-256 |
-| 判定 Decision | `tier`、`score`、`checks`、`reasons`、`matched_rules` | 四档结论及完整理由链 |
+| 判定 Decision | `tier`、`score`、`checks`、`reasons`、`matched_rules`、`trace` | 四档结论及完整理由链；`trace` 是可回溯的溯源链（候选规则命中、字段级覆盖顺序、采纳/否决/遮蔽节点），仅观察不参与判定 |
 | 计划 Plan | `plan_id`、`plan_hash`、`actions[]`、`summary` | 动作类型 `move / mark_purge / noop`，状态 `ready / blocked / noop` |
 | 批次 Batch | `batch_id`、`plan_id`、`status`、`moved_count`、`marked_count` | 状态包括 `running / completed / failed / rolled_back / rollback_partial` |
 | 动作 Action | `seq`、`source_rel`、`target_rel`、`bytes`、`status` | 台账中保留初始状态、执行结果和回滚结果 |
@@ -31,8 +31,13 @@ SQLite 表：`snapshots`、`policies`、`plans`、`batches`、`actions`、
 3. 动作先按 `move < mark_purge < noop`、状态 `ready < blocked < noop`、
    再按表/分区/ID 排序，最后赋 `seq`。
 4. 策略命中规则先按 `(priority, match)` 升序应用字段覆盖，输出命中链按时
-   优先级降序。
+   优先级降序。溯源链 `trace` 复用同一排序，因此其覆盖顺序与最终配置严格一致。
 5. 访问记录按 `(ts, line)` 排序，保证相同日志输入得到相同的最后访问时间。
+
+**溯源链与判定不变性。** `trace` 在判定完成后附加到每条 decision，位于
+`evaluation.json` 的 `decisions[]` 内，不改变顶层结构、`plan_hash` 口径或
+planner 消费的字段。任何溯源构建失败都降级为 `trace.degraded` 记录，不会让
+evaluate 失败；单条分区数据异常只记入 `summary.skipped`，整体扫描继续。
 
 **哈希口径。**
 
